@@ -14,17 +14,9 @@ class HYPHENATOR_DLL_API HyphenatorFast : public Hyphenator
     //! Служебный класс для HyphenatorFast
     struct HyphenPairFast
     {
-        HyphenPairFast()
-        {
-            pattern = "";
-            position = 0;
-        }
-        HyphenPairFast(QString pattern, int position)
-            : pattern(pattern)
-            , position(position)
-        {
-        }
-        ~HyphenPairFast() {}
+        HyphenPairFast();
+        HyphenPairFast(QString pattern, int position);
+        ~HyphenPairFast();
         QString pattern;
         int position;
     };
@@ -41,5 +33,9 @@ private:
     RulesFast _rules;
     //! Сначала doHyphenate делит слово по дефисам, а затем вызывает этот алгоритм разбиения на слоги
     QStringList doHyphenateInternal(const QString& s);
+
+    static const QString _x;
+    static const QString _g;
+    static const QString _s;
 };
 }

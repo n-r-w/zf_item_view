@@ -3,7 +3,7 @@
 #include <QDataStream>
 #include <QRegularExpression>
 
-inline QString utf(const char* sourcetext)
+QString utf(const char* sourcetext)
 {
     return QString::fromUtf8(sourcetext);
 };
@@ -38,8 +38,33 @@ void Hyphenator::hyphenate(HyphenatedPhrase& phrase)
     }
 }
 
+HyphenatedWord::HyphenatedWord()
+    : HyphenatedItem()
+{
+}
+
+HyphenatedWord::HyphenatedWord(const QString& text)
+    : HyphenatedItem(text)
+{
+}
+
 HyphenatedWord::~HyphenatedWord()
 {
+}
+
+bool HyphenatedWord::isHyphenated() const
+{
+    return text().isEmpty() || _splitInfo.count() > 0;
+}
+
+QStringList HyphenatedWord::splitInfo() const
+{
+    return _splitInfo;
+}
+
+bool HyphenatedWord::isAbbreviation() const
+{
+    return Hyphenation::isAbbreviation(text());
 }
 
 HyphenatedWord& HyphenatedWord::operator=(const HyphenatedWord& item)
@@ -51,8 +76,28 @@ HyphenatedWord& HyphenatedWord::operator=(const HyphenatedWord& item)
     return *this;
 }
 
+HyphenatedPhrase::HyphenatedPhrase()
+    : HyphenatedItem()
+{
+}
+
+HyphenatedPhrase::HyphenatedPhrase(const QString& text)
+    : HyphenatedItem(text)
+{
+}
+
 HyphenatedPhrase::~HyphenatedPhrase()
 {
+}
+
+bool HyphenatedPhrase::isHyphenated() const
+{
+    return text().isEmpty() || _hyphenatedWords.count() > 1;
+}
+
+QVector<HyphenatedWord> HyphenatedPhrase::hyphenatedWords() const
+{
+    return _hyphenatedWords;
 }
 
 HyphenatedPhrase& HyphenatedPhrase::operator=(const HyphenatedPhrase& item)
@@ -64,8 +109,27 @@ HyphenatedPhrase& HyphenatedPhrase::operator=(const HyphenatedPhrase& item)
     return *this;
 }
 
+HyphenatedItem::HyphenatedItem()
+{
+}
+
+HyphenatedItem::HyphenatedItem(const QString& text)
+    : _text(text.simplified())
+{
+}
+
 HyphenatedItem::~HyphenatedItem()
 {
+}
+
+QString HyphenatedItem::text() const
+{
+    return _text;
+}
+
+bool HyphenatedItem::isEmpty() const
+{
+    return _text.isEmpty();
 }
 
 HyphenatedItem& HyphenatedItem::operator=(const HyphenatedItem& item)

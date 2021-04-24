@@ -8,15 +8,10 @@ static QString generateHasgString(const QString& data)
     return QString(QCryptographicHash::hash(data.toUtf8(), QCryptographicHash::Sha3_224).toHex());
 }
 
-inline QString utf(const char* sourcetext)
-{
-    return QString::fromUtf8(sourcetext);
-};
-
 namespace Hyphenation
 {
 //! Развернуть строку
-inline QString rotateString(const QString& str)
+static QString rotateString(const QString& str)
 {
     QString res = str;
     int i, count;
@@ -399,10 +394,10 @@ QString GlobalTextHyphenationFormatter::stringToMultiline(const QFontMetrics& fm
 {
     width = qMax(fm.horizontalAdvance('W') * 4, width);
     QString v = value;
-    v.replace("\n", " ");
+    v.replace('\n', ' ');
 
     using namespace Hyphenation;
     QStringList sl = formatter()->split(v, width, fm, fm.averageCharWidth(), TextHyphenationFormatter::HyphenateWrap);
-    return sl.join("\n");
+    return sl.join('\n');
 }
 } // namespace Hyphenation

@@ -76,6 +76,36 @@ void HyphenationHash::clearOldHash(const QDate& date)
     }
 }
 
+HyphenationHash::HashData::HashData()
+    : _dateUsed(QDate::currentDate())
+{
+}
+
+HyphenationHash::HashData::HashData(const HyphenatedWord& word)
+    : _dateUsed(QDate::currentDate())
+    , _word(word)
+{
+}
+
+HyphenationHash::HashData::~HashData()
+{
+}
+
+HyphenatedWord& HyphenationHash::HashData::word()
+{
+    return _word;
+}
+
+QDate HyphenationHash::HashData::dateUsed() const
+{
+    return _dateUsed;
+}
+
+void HyphenationHash::HashData::setCurrentDate()
+{
+    _dateUsed = QDate::currentDate();
+}
+
 HyphenationHash::HashData& HyphenationHash::HashData::operator=(const HyphenationHash::HashData& data)
 {
     if (&data != this) {

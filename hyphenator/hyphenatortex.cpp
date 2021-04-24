@@ -5,15 +5,16 @@
 namespace Hyphenation
 {
 static const QChar _marker('.');
-inline bool isdigit_func(const QChar& c)
+
+static bool isdigit_func(const QChar& c)
 {
     return c >= '0' && c <= '9';
 }
-inline bool ismarker_func(const QChar& c)
+static bool ismarker_func(const QChar& c)
 {
     return c == _marker;
 }
-inline int char2digit_func(const QChar& c)
+static int char2digit_func(const QChar& c)
 {
     return c.unicode() - QChar('0').unicode();
 }
@@ -111,4 +112,14 @@ void HyphenatorTeX::createPattern(PatternItemTeX& pattern, const QString& str)
         pattern.levels.append(0);
     }
 }
+
+HyphenatorTeX::PatternItemTeX::PatternItemTeX()
+{
 }
+
+void HyphenatorTeX::PatternItemTeX::clear()
+{
+    str.clear();
+    levels.clear();
+}
+} // namespace Hyphenation

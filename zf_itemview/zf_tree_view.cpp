@@ -447,11 +447,11 @@ int TreeView::indexLevel(const QModelIndex& index)
 
 std::shared_ptr<QMap<int, bool>> TreeView::cellCheckColumnsHelper(int level) const
 {
-    auto columns = _cell_сheck_сolumns.value(-1);
+    auto columns = _cell_check_columns.value(-1);
     if (columns != nullptr)
         return columns;
 
-    columns = _cell_сheck_сolumns.value(level);
+    columns = _cell_check_columns.value(level);
     if (columns != nullptr)
         return columns;
 
@@ -578,10 +578,10 @@ QMap<int, bool> TreeView::cellCheckColumns(int level) const
 void TreeView::setCellCheckColumn(int logical_index, bool visible, bool enabled, int level)
 {
     Q_ASSERT(level >= -1);
-    auto columns = _cell_сheck_сolumns.value(level);
+    auto columns = _cell_check_columns.value(level);
     if (columns == nullptr) {
         columns = std::make_shared<QMap<int, bool>>();
-        _cell_сheck_сolumns[level] = columns;
+        _cell_check_columns[level] = columns;
     }
 
     if (visible) {
@@ -593,7 +593,7 @@ void TreeView::setCellCheckColumn(int logical_index, bool visible, bool enabled,
             return;
         columns->remove(logical_index);
         if (columns->isEmpty())
-            _cell_сheck_сolumns.remove(level);
+            _cell_check_columns.remove(level);
     }
 
     viewport()->update();

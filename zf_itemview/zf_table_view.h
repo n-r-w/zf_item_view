@@ -255,7 +255,7 @@ private:
     bool _request_resize = false;
 
     //! Колонки, в ячейках которых, находятся чекбоксы (ключ - логические индексы колонок, значение - можно менять)
-    QMap<int, bool> _cell_сheck_сolumns;
+    QMap<int, bool> _cell_check_columns;
     //! Состояние чекбокса ячейки. Если TableView подключена к наследнику QAbstractProxyModel, то это номер индекс source
     mutable QList<QPersistentModelIndex> _cell_checked;
 };

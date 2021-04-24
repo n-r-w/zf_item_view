@@ -13,15 +13,8 @@ class HYPHENATOR_DLL_API HyphenatorTeX : public Hyphenator
     //! Шаблон TeX (cлужебный класс для Hyphenator)
     struct PatternItemTeX
     {
-        PatternItemTeX()
-            : str("")
-        {
-        }
-        void clear()
-        {
-            str = "";
-            levels.clear();
-        }
+        PatternItemTeX();
+        void clear();
 
         QString str;
         QVector<int> levels;

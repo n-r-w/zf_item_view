@@ -185,7 +185,7 @@ private:
     //! Колонки, в ячейках которых, находятся чекбоксы (логические индексы колонок)
     //! Ключ - уровень вложенности (-1 для всех уровней)
     //! Значение мап: ключ - логические индексы колонок, значение - можно менять
-    QMap<int, std::shared_ptr<QMap<int, bool>>> _cell_сheck_сolumns;
+    QMap<int, std::shared_ptr<QMap<int, bool>>> _cell_check_columns;
     //! Состояние чекбокса ячейки. Если TableView подключена к наследнику QAbstractProxyModel, то это номер индекс source
     mutable QList<QPersistentModelIndex> _cell_checked;
 

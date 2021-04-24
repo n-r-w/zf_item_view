@@ -2,9 +2,9 @@
 
 namespace Hyphenation
 {
-static const QString _x = QString::fromUtf8("йьъ");
-static const QString _g = QString::fromUtf8("аеёиоуыэюяaeiouy");
-static const QString _s = QString::fromUtf8("бвгджзклмнпрстфхцчшщbcdfghjklmnpqrstvwxz");
+const QString HyphenatorFast::_x = QString::fromUtf8("йьъ");
+const QString HyphenatorFast::_g = QString::fromUtf8("аеёиоуыэюяaeiouy");
+const QString HyphenatorFast::_s = QString::fromUtf8("бвгджзклмнпрстфхцчшщbcdfghjklmnpqrstvwxz");
 
 HyphenatorFast::HyphenatorFast()
 {
@@ -34,11 +34,11 @@ QStringList HyphenatorFast::doHyphenateInternal(const QString& s)
 
     for (QString::ConstIterator c = text.constBegin(); c != text.constEnd(); c++) {
         if (_x.indexOf(*c) != -1) {
-            hyphenatedText.append("x");
+            hyphenatedText.append('x');
         } else if (_g.indexOf(*c) != -1) {
-            hyphenatedText.append("g");
+            hyphenatedText.append('g');
         } else if (_s.indexOf(*c) != -1) {
-            hyphenatedText.append("s");
+            hyphenatedText.append('s');
         } else {
             hyphenatedText.append(*c);
         }
@@ -94,4 +94,20 @@ QStringList HyphenatorFast::doHyphenate(const QString& s)
     }
     return nodes;
 }
+
+HyphenatorFast::HyphenPairFast::HyphenPairFast()
+    : position(0)
+{
+}
+
+HyphenatorFast::HyphenPairFast::HyphenPairFast(QString pattern, int position)
+    : pattern(pattern)
+    , position(position)
+{
+}
+
+HyphenatorFast::HyphenPairFast::~HyphenPairFast()
+{
+}
+
 } // namespace Hyphenation

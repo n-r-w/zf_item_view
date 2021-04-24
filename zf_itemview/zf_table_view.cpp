@@ -573,7 +573,7 @@ void TableView::checkAllRows(bool checked)
 QMap<int, bool> TableView::cellCheckColumns(int level) const
 {
     Q_UNUSED(level)
-    return _cell_сheck_сolumns;
+    return _cell_check_columns;
 }
 
 void TableView::setCellCheckColumn(int logical_index, bool visible, bool enabled, int level)
@@ -581,13 +581,13 @@ void TableView::setCellCheckColumn(int logical_index, bool visible, bool enabled
     Q_UNUSED(level)
 
     if (visible) {
-        if (_cell_сheck_сolumns.contains(logical_index))
+        if (_cell_check_columns.contains(logical_index))
             return;
-        _cell_сheck_сolumns[logical_index] = enabled;
+        _cell_check_columns[logical_index] = enabled;
     } else {
-        if (!_cell_сheck_сolumns.contains(logical_index))
+        if (!_cell_check_columns.contains(logical_index))
             return;
-        _cell_сheck_сolumns.remove(logical_index);
+        _cell_check_columns.remove(logical_index);
     }
 
     viewport()->update();
