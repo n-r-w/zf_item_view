@@ -591,6 +591,8 @@ void TableView::setCellCheckColumn(int logical_index, bool visible, bool enabled
     }
 
     viewport()->update();
+    if (_frozen_table_view != nullptr)
+        _frozen_table_view->viewport()->update();
 }
 
 bool TableView::isCellChecked(const QModelIndex& index) const
