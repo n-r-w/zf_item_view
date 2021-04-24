@@ -1,6 +1,8 @@
 /**
 @mainpage Разбиение слов и предложений на слоги, в соответствие с морфологией русского и английского языка
 Все классы библиотеки Hyphenator находятся в пространстве имен Hyphenation
+
+Roman Nikulenkov, https://github.com/n-r-w
 */
 
 #pragma once

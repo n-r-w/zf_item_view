@@ -1,3 +1,8 @@
+/**
+QTableView and QTreeView with hierarchical headers, frozen columns, dragged columns and more.
+Roman Nikulenkov, https://github.com/n-r-w
+*/
+
 #pragma once
 
 #if (defined(WIN32) || defined(_WIN32))
