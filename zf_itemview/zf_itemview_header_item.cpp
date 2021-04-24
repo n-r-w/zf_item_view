@@ -1304,6 +1304,8 @@ HeaderItem::HeaderItem(Type type, Qt::Orientation orientation, ItemViewHeaderMod
 
     if (isRoot()) {
         _recalc_timer = new QTimer(this);
+        _recalc_timer->setInterval(0);
+        _recalc_timer->setSingleShot(true);
         connect(_recalc_timer, &QTimer::timeout, this, [&]() { calculateSectionsSizeHelper(); });
     } else {
         Q_ASSERT(isEmpty());

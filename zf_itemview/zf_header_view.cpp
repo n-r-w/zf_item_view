@@ -29,7 +29,7 @@ HeaderView::HeaderView(Qt::Orientation orientation, QWidget* parent)
     _reload_data_from_root_item_timer = new QTimer(this);
     _reload_data_from_root_item_timer->setSingleShot(true);
     _reload_data_from_root_item_timer->setInterval(0);
-    connect(_reload_data_from_root_item_timer, &QTimer::timeout, [&]() { reloadDataFromRootItemHelper(); });
+    connect(_reload_data_from_root_item_timer, &QTimer::timeout, this, [&]() { reloadDataFromRootItemHelper(); });
 
     if (orientation == Qt::Horizontal) {
         setContextMenuPolicy(Qt::CustomContextMenu);
@@ -599,7 +599,7 @@ int HeaderView::limitSectionCount() const
     auto bottom = rootItem()->allBottomVisual(Qt::AscendingOrder);
     QSet<HeaderItem*> top;
 
-    for (auto h : bottom) {
+    for (auto h : qAsConst(bottom)) {
         if (h->isHidden())
             continue;
 
@@ -846,7 +846,7 @@ void HeaderView::reloadDataFromRootItemHelper()
 
     // перечитать и применить параметры заголовка
     auto all_bottom = rootItem()->allBottom();
-    for (auto h : all_bottom) {
+    for (auto h : qAsConst(all_bottom)) {
         if (logicalIndex(h->sectionFrom()) < 0)
             continue;
 
@@ -912,7 +912,7 @@ void HeaderView::updateVisualOrder()
 {
     auto items = rootItem()->allBottomVisual(Qt::DescendingOrder);
 
-    for (auto h : items) {
+    for (auto h : qAsConst(items)) {
         int new_visual = h->sectionFrom(false);
         int current_visual = visualIndex(h->sectionFrom());
 
@@ -1105,6 +1105,8 @@ void HeaderView::sl_sectionResized(int logical_index, int old_size, int new_size
     _block_change_header_items_counter++;
     rootItem()->setSectionsSizes(getSectionsSizes(logical_index, new_size));
     _block_change_header_items_counter--;
+
+    viewport()->update();
 }
 
 void HeaderView::sl_columnsInserted(const QModelIndex& parent, int first, int last)

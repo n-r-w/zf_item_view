@@ -702,6 +702,8 @@ void ItemDelegate::lazyInit() const
     ItemDelegate* self = const_cast<ItemDelegate*>(this);
 
     self->_close_editor_timer = new QTimer(self);
+    self->_close_editor_timer->setInterval(0);
+    self->_close_editor_timer->setSingleShot(true);
 
     if (_main_item_view != nullptr)
         connect(_main_item_view->selectionModel(), &QItemSelectionModel::currentChanged, this, &ItemDelegate::sl_currentChanged);
