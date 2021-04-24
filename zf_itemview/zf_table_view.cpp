@@ -1086,7 +1086,7 @@ int TableView::frozenRightPos() const
 
     int w = 0;
     int count = frozenSectionCount(false);
-    for (int col = 0; col < count; ++col) {
+    for (int col = 0; col < qMin(horizontalHeader()->count(), count); ++col) {
         int width = _frozen_table_view->columnWidth(_frozen_table_view->horizontalHeader()->logicalIndex(col));
         if (width <= 0 || _frozen_table_view->isColumnHidden(_frozen_table_view->horizontalHeader()->logicalIndex(col))) {
             count++;
