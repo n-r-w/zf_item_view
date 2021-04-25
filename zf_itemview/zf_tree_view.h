@@ -57,9 +57,9 @@ public:
 
 public: // выделение строк (панель слева от таблицы)
     //! Показать панель с чекбоксами
-    void showCheckPanel(bool show);
+    void showCheckRowPanel(bool show);
     //! Отображается ли панель с чекбоксами
-    bool isShowCheckPanel() const;
+    bool isShowCheckRowPanel() const;
     //! Есть ли строки, выделенные чекбоксами
     bool hasCheckedRows() const;
     //! Проверка строки на выделение чекбоксом.

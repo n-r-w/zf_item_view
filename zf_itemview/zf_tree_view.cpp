@@ -131,7 +131,7 @@ Error TreeView::deserialize(const QByteArray& ba)
 
 void TreeView::updateGeometries()
 {
-    if (!isShowCheckPanel()) {
+    if (!isShowCheckRowPanel()) {
         QTreeView::updateGeometries();
         return;
     }
@@ -373,14 +373,14 @@ void TreeView::sl_columnResized(int column, int oldWidth, int newWidth)
 void TreeView::sl_expanded(const QModelIndex& index)
 {
     Q_UNUSED(index)
-    if (isShowCheckPanel())
+    if (isShowCheckRowPanel())
         _check_panel->update();
 }
 
 void TreeView::sl_collapsed(const QModelIndex& index)
 {
     Q_UNUSED(index)
-    if (isShowCheckPanel())
+    if (isShowCheckRowPanel())
         _check_panel->update();
 }
 
@@ -473,9 +473,9 @@ QModelIndex TreeView::sourceIndex(const QModelIndex& index) const
     return idx;
 }
 
-void TreeView::showCheckPanel(bool show)
+void TreeView::showCheckRowPanel(bool show)
 {
-    if (isShowCheckPanel() == show)
+    if (isShowCheckRowPanel() == show)
         return;
 
     _check_panel->setHidden(!show);
@@ -484,7 +484,7 @@ void TreeView::showCheckPanel(bool show)
     emit sg_checkPanelVisibleChanged();
 }
 
-bool TreeView::isShowCheckPanel() const
+bool TreeView::isShowCheckRowPanel() const
 {
     return !_check_panel->isHidden();
 }

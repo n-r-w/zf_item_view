@@ -37,7 +37,7 @@
        <widget class="QPushButton" name="check_panel">
         <property name="text">
          <string>Check panel
- (TableView)</string>
+ (TableView + TreeView)</string>
         </property>
        </widget>
       </item>
