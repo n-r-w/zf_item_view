@@ -686,6 +686,9 @@ void TableView::setAutoShring(bool b)
 
     _auto_shrink = b;
 
+    if (b)
+        setSizePolicy(sizePolicy().horizontalPolicy(), QSizePolicy::Minimum);
+
     updateGeometry();
     if (_frozen_table_view != nullptr)
         _frozen_table_view->updateGeometry();

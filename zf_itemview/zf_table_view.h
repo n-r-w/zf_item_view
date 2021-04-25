@@ -118,6 +118,8 @@ public:
     //! Автоматически подгонять высоту строк под содержимое
     bool isAutoResizeRowsHeight() const final;
     void setAutoResizeRowsHeight(bool b);
+
+public:
     void scrollTo(const QModelIndex& index, ScrollHint hint = EnsureVisible) override;
     void updateGeometries() override;
     void setModel(QAbstractItemModel* model) override;

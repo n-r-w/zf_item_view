@@ -40,8 +40,12 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
+    _shrink_table_model.setColumnCount(COL_COUNT);
+    addShrinkRow(5);
+
     _table_view = new zf::TableView;
     _table_view->setAutoResizeRowsHeight(false);
+    _table_view->setSortingEnabled(true);
     _table_view->setModel(&_table_model);
     configureHeader(_table_view->horizontalRootHeaderItem());
 
@@ -49,8 +53,18 @@ MainWindow::MainWindow(QWidget *parent)
     _tree_view->setModel(&_tree_model);
     configureHeader(_tree_view->rootHeaderItem());
 
-    ui->main_la->addWidget(_table_view);
-    ui->main_la->addWidget(_tree_view);
+    _shrink_table_view = new zf::TableView;
+    _shrink_table_view->setAutoResizeRowsHeight(false);
+    _shrink_table_view->setSortingEnabled(true);
+    _shrink_table_view->setShrinkMinimumRowCount(5);
+    _shrink_table_view->setShrinkMaximumRowCount(10);
+    _shrink_table_view->setAutoShring(true);
+    _shrink_table_view->setModel(&_shrink_table_model);
+    configureHeader(_shrink_table_view->horizontalRootHeaderItem());
+
+    ui->la_general_views->addWidget(_table_view);
+    ui->la_general_views->addWidget(_tree_view);
+    ui->la_shrink_table->addWidget(_shrink_table_view);
 }
 
 MainWindow::~MainWindow()
@@ -65,6 +79,26 @@ void MainWindow::configureHeader(zf::HeaderItem* parent)
         item->append("Child header 1");
         item->append("Child header 2");
     }
+}
+
+void MainWindow::addShrinkRow(int count)
+{
+    for (int i = 0; i < count; i++) {
+        int row = _shrink_table_model.rowCount() - 1;
+
+        QList<QStandardItem*> items;
+        for (int col = 0; col < COL_COUNT; col++) {
+            items << new QStandardItem(QString("Row %1, Column %2").arg(row + 1).arg(col + 1));
+        }
+
+        _shrink_table_model.appendRow(items);
+    }
+}
+
+void MainWindow::removeShrinkRow()
+{
+    if (_shrink_table_model.rowCount() > 0)
+        _shrink_table_model.removeRows(_shrink_table_model.rowCount() - 1, 1);
 }
 
 void MainWindow::on_auto_height_clicked()
@@ -100,4 +134,14 @@ void MainWindow::on_check_cell_clicked()
         _tree_view->setCellCheckColumn(2, false, false, 0);
         _tree_view->setCellCheckColumn(2, false, false, 2);
     }
+}
+
+void MainWindow::on_add_row_clicked()
+{
+    addShrinkRow(1);
+}
+
+void MainWindow::on_remove_row_clicked()
+{
+    removeShrinkRow();
 }

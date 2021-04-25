@@ -14,58 +14,115 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="main_la" stretch="0,1">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="la_general" stretch="0,1">
       <item>
-       <widget class="QPushButton" name="auto_height">
-        <property name="text">
-         <string>Row autoheight
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="auto_height">
+          <property name="text">
+           <string>Row autoheight
  (TableView)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="frozen">
-        <property name="text">
-         <string>Frozen columns
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="frozen">
+          <property name="text">
+           <string>Frozen columns
  (TableView)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="check_panel">
-        <property name="text">
-         <string>Check panel
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="check_panel">
+          <property name="text">
+           <string>Check panel
  (TableView + TreeView)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="check_cell">
-        <property name="text">
-         <string>Check cells
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="check_cell">
+          <property name="text">
+           <string>Check cells
  (TableView + TreeView (0 и 2 levels)</string>
-        </property>
-       </widget>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
+       <layout class="QVBoxLayout" name="la_general_views"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="la_shrink">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="add_row">
+          <property name="text">
+           <string>Add
+row</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="remove_row">
+          <property name="text">
+           <string>Remove
+row</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="la_shrink_table"/>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
-          <height>20</height>
+          <width>20</width>
+          <height>40</height>
          </size>
         </property>
        </spacer>
       </item>
      </layout>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout"/>
     </item>
    </layout>
   </widget>

@@ -27,8 +27,15 @@ private slots:
 
     void on_check_cell_clicked();
 
+    void on_add_row_clicked();
+
+    void on_remove_row_clicked();
+
 private:
     void configureHeader(zf::HeaderItem* parent);
+
+    void addShrinkRow(int count);
+    void removeShrinkRow();
 
     Ui::MainWindow* ui;
 
@@ -40,4 +47,7 @@ private:
 
     const int COL_COUNT = 10;
     const int ROW_COUNT = 100;
+
+    QStandardItemModel _shrink_table_model;
+    zf::TableView* _shrink_table_view = nullptr;
 };
