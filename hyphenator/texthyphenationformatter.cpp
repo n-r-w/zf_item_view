@@ -91,7 +91,7 @@ QStringList TextHyphenationFormatter::splitHelper(const QString& text, int width
                 tempMaxWidth--;
             }
             realPixelWidth = fontMetrics.horizontalAdvance(restText, tempMaxWidth);
-            if (tempMaxWidth <= 1) { // TODO исправить в PSVD
+            if (tempMaxWidth <= 1) {
                 tempMaxWidth = 1;
                 break;
             }

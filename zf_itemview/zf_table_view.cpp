@@ -57,6 +57,7 @@ void CheckBoxPanel::paintEvent(QPaintEvent* e)
         return;
 
     QStylePainter painter(this);
+    painter.setClipRect(0, 0, _view->width(), _view->height() - 1);
 
     QStyleOptionButton check_option;
     auto rects = checkboxRects();
