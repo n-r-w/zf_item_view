@@ -23,7 +23,7 @@ void TableViewCorner::paintEvent(QPaintEvent* event)
         painter.setBrush(palette().brush(QPalette::Button));
         painter.fillRect(rect().adjusted(1, 1, 0, 0), palette().brush(QPalette::Button));
 
-        painter.setPen(palette().color(QPalette::Mid));
+        painter.setPen(Utils::pen(palette().color(QPalette::Mid)));
         painter.drawLine(rect().right(), rect().top(), rect().right(), rect().bottom());
         painter.drawLine(rect().left(), rect().bottom(), rect().right(), rect().bottom());
     }

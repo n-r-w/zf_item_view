@@ -113,6 +113,14 @@ protected:
     //! Высота горизонтального заголовка
     virtual int horizontalHeaderHeight() const;
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    //! Выводим в паблик
+    using QTableView::viewOptions;
+#else
+    //! Для совместимости с Qt5
+    QStyleOptionViewItem viewOptions() const;
+#endif
+
 private slots:
 
     //! Колонки горизонтального заголовка перемещаются через Drag&Drop

@@ -55,7 +55,7 @@ void TreeCheckBoxPanel::paintEvent(QPaintEvent* e)
 
         // линии
         painter.save();
-        painter.setPen(Utils::uiLineColor(true));
+        painter.setPen(Utils::pen(Utils::uiLineColor(true)));
         painter.drawLine(width() - 1, rect.first.top() - 1, width() - 1, rect.first.bottom());
         painter.restore();
     }
@@ -67,7 +67,7 @@ void TreeCheckBoxPanel::paintEvent(QPaintEvent* e)
             = QRect(1, _view->horizontalHeader()->geometry().top(), width() - 1, _view->horizontalHeader()->geometry().bottom());
         painter.fillRect(header_rect, palette().brush(QPalette::Button));
 
-        painter.setPen(Utils::uiLineColor(true));
+        painter.setPen(Utils::pen(Utils::uiLineColor(true)));
         painter.drawLine(header_rect.right(), header_rect.top(), header_rect.right(), header_rect.bottom());
         painter.drawLine(header_rect.left(), header_rect.bottom(), header_rect.right(), header_rect.bottom());
 
@@ -89,7 +89,7 @@ void TreeCheckBoxPanel::paintEvent(QPaintEvent* e)
 
     // вертикальная линия
     painter.save();
-    painter.setPen(Utils::uiLineColor(true));
+    painter.setPen(Utils::pen(Utils::uiLineColor(true)));
     painter.drawLine(width() - 1, 0, width() - 1, rect().bottom());
     painter.restore();
 }
@@ -226,7 +226,12 @@ QPair<QRect, QRect> TreeCheckBoxPanel::headerCheckboxRect() const
 QSize TreeCheckBoxPanel::checkboxSize()
 {
     QStyleOptionButton check_option;
-    return (qApp->style()->sizeFromContents(QStyle::CT_CheckBox, &check_option, QSize()).expandedTo(QApplication::globalStrut()));
+    return (qApp->style()
+                ->sizeFromContents(QStyle::CT_CheckBox, &check_option, QSize())
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+                .expandedTo(QApplication::globalStrut())
+#endif
+    );
 }
 
 QModelIndex TreeCheckBoxPanel::cursorIndex(const QPoint& c) const

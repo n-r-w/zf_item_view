@@ -63,6 +63,9 @@ public:
     //! Цвет выделения текста в таблицах
     static QColor uiInfoTableTextColor();
 
+    //! Создать QPen (Qt6 криво отрисовывает линии если не задать setCosmetic(true))
+    static QPen pen(const QColor& color, int width = 1);
+
     //! Возвращает самый верхий индекс по цепочке прокси
     static QModelIndex getTopSourceIndex(const QModelIndex& index);
     //! Поиск по модели следующего или предыдущего элемента. Возвращает всегда индекс в с колонкой 0

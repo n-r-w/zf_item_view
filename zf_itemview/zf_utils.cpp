@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QTime>
 #include <QDateTime>
+#include <QIODevice>
 
 namespace zf
 {
@@ -48,6 +49,13 @@ QColor Utils::uiInfoTableBackgroundColor()
 QColor Utils::uiInfoTableTextColor()
 {
     return QColor(162, 0, 37);
+}
+
+QPen Utils::pen(const QColor& color, int width)
+{
+    QPen pen = QPen(color, width);
+    pen.setCosmetic(true);
+    return pen;
 }
 
 QModelIndex Utils::getTopSourceIndex(const QModelIndex& index)

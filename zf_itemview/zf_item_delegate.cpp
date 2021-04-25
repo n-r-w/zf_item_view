@@ -448,16 +448,6 @@ void ItemDelegate::setModelDataInternal(QWidget* editor, QAbstractItemModel* mod
     HintItemDelegate::setModelData(editor, model, index);
 }
 
-void ItemDelegate::paintErrorBox(
-    QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, const QColor& color, int line_width) const
-{
-    Q_UNUSED(index)
-    painter->save();
-    painter->setPen(QPen(color, line_width, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
-    painter->drawRect(option.rect);
-    painter->restore();
-}
-
 void ItemDelegate::sl_closeEditor(QWidget* editor, QAbstractItemDelegate::EndEditHint hint)
 {
     // Борьба с багом, при котором Qt вызывает сигнал закрытия редактора при открытии его через enter
@@ -561,12 +551,12 @@ void ItemDelegate::paintCellContent(QStyle *style, QPainter *p, const QStyleOpti
                 cg = QPalette::Inactive;
 
             if (opt->state & QStyle::State_Selected) {
-                p->setPen(opt->palette.color(cg, QPalette::HighlightedText));
+                p->setPen(Utils::pen(opt->palette.color(cg, QPalette::HighlightedText)));
             } else {
-                p->setPen(opt->palette.color(cg, QPalette::Text));
+                p->setPen(Utils::pen(opt->palette.color(cg, QPalette::Text)));
             }
             if (opt->state & QStyle::State_Editing) {
-                p->setPen(opt->palette.color(cg, QPalette::Text));
+                p->setPen(Utils::pen(opt->palette.color(cg, QPalette::Text)));
                 p->drawRect(textRect.adjusted(0, 0, -1, -1));
             }
 

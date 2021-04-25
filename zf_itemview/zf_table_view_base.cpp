@@ -124,6 +124,15 @@ int TableViewBase::horizontalHeaderHeight() const
     return qMin(height, horizontalHeader()->maximumHeight());
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+QStyleOptionViewItem TableViewBase::viewOptions() const
+{
+    QStyleOptionViewItem opt;
+    initViewItemOption(&opt);
+    return opt;
+}
+#endif
+
 void TableViewBase::updateGeometries()
 {
     // Метод setViewportMargins предназначен для управления отступами. Мало того, в документации указано что это может быть полезно при
@@ -445,14 +454,14 @@ void TableViewBase::paintEvent(QPaintEvent* event)
 
             for (auto i = intervals.constBegin(); i != intervals.constEnd(); ++i) {
                 if (vusual_col > first_visible_visual) {
-                    painter.setPen(QPen(grid_color, 1, Qt::SolidLine));
+                    painter.setPen(Utils::pen(grid_color));
                     painter.drawLine(left - 1, i->first, left - 1, i->second);
                 }
 
                 if (vusual_col < last_visible_visual
                     || (!header->stretchLastSection() && vusual_col <= last_visible_visual)) {
                     int size = header->sectionSize(logical_col);
-                    painter.setPen(QPen(grid_color, 1, Qt::SolidLine));
+                    painter.setPen(Utils::pen(grid_color));
                     painter.drawLine(left + size - 1, i->first, left + size - 1, i->second);
                 }
             }

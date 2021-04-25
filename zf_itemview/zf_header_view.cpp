@@ -118,7 +118,7 @@ void HeaderView::paintEvent(QPaintEvent* e)
     if (orientation() == Qt::Vertical) {
         // отрисовка вертикальной линии
         painter.save();
-        painter.setPen(Utils::uiLineColor(true));
+        painter.setPen(Utils::pen(Utils::uiLineColor(true)));
         painter.drawLine(width() - 1, 0, width() - 1, height());
         painter.restore();
     }
@@ -407,10 +407,8 @@ void HeaderView::paintSectionHelper(QPainter* painter, const QRect& rect, int lo
         QIcon icon;
         bool is_bottom = true;
         int section_from = -1;
-        int visual_col_from_hidden = -1;
-        //        int visual_col_to_hidden = -1;
-        int visual_row_from_hidden = -1;
-        //        int row_span_to = -1;
+        int visual_col_from_hidden = -1;        
+        int visual_row_from_hidden = -1;        
 
         if (info->header_item == nullptr) {
             text = QString::number(visualIndex(logicalIndex) + 1);
@@ -418,8 +416,6 @@ void HeaderView::paintSectionHelper(QPainter* painter, const QRect& rect, int lo
             section_from = logicalIndex;
             if (orientation() == Qt::Horizontal) {
                 visual_col_from_hidden = visualIndex(logicalIndex);
-                //                visual_col_to_hidden = visual_col_from_hidden;
-                //                row_span_to = depth - 1;
             } else {
                 visual_row_from_hidden = visualIndex(logicalIndex);
             }
@@ -435,8 +431,6 @@ void HeaderView::paintSectionHelper(QPainter* painter, const QRect& rect, int lo
             icon = info->header_item->icon();
             if (orientation() == Qt::Horizontal) {
                 visual_col_from_hidden = info->visual_col_from_hidden;
-                //                visual_col_to_hidden = info->visual_col_to_hidden;
-                //                row_span_to = info->row_span_to;
             } else {
                 visual_row_from_hidden = info->visual_row_from_hidden;
             }
@@ -469,17 +463,20 @@ void HeaderView::paintSectionHelper(QPainter* painter, const QRect& rect, int lo
 
             painter->setBrush(opt.palette.brush(QPalette::Button));
             painter->fillRect(cell_rect, opt.palette.brush(QPalette::Button));
+            painter->restore();
 
+            painter->save();
             if (transparent)
                 painter->setOpacity(1);
-            painter->setPen(opt.palette.color(QPalette::Mid));
+
+            painter->setPen(Utils::pen(opt.palette.color(QPalette::Mid)));
 
             if (orientation() == Qt::Horizontal) {
                 if (this->logicalIndex(visual_col_from_hidden) != first_visible) {
                     painter->drawLine(cell_rect.left() - 1, cell_rect.top(), cell_rect.left() - 1, cell_rect.bottom());
                 }
 
-                if (cell_rect.right() < viewport()->geometry().right()) {                    
+                if (cell_rect.right() < viewport()->geometry().right()) {
                     painter->drawLine(cell_rect.right(), cell_rect.top(), cell_rect.right(), cell_rect.bottom());
                 }
                 painter->drawLine(cell_rect.left(), cell_rect.bottom(), cell_rect.right(), cell_rect.bottom());
@@ -751,7 +748,7 @@ void HeaderView::mouseMoveEvent(QMouseEvent* event)
             paintSectionHelper(&painter, rect, col, true);
             painter.restore();
         }
-        painter.setPen(Qt::darkGray);
+        painter.setPen(Utils::pen(Qt::darkGray));
         painter.setOpacity(0.5);
         painter.drawRect(info->source_info->group_rect.adjusted(0, 0, -1, -1));
         painter.end();
@@ -883,8 +880,12 @@ void HeaderView::reloadDataFromRootItemHelper()
                     continue;
             }
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
             // тут специально не используется QMultiMap
             sizes.unite(getSectionsSizes(i, -1));
+#else
+            sizes.insert(getSectionsSizes(i, -1));
+#endif
 
             if (i < rootItem()->sectionSpan()) {
                 if (parentWidget() != nullptr)

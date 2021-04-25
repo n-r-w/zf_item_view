@@ -81,8 +81,6 @@ protected:
     virtual QWidget* createEditorInternal(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     virtual void setEditorDataInternal(QWidget* editor, const QModelIndex& index) const;
     virtual void setModelDataInternal(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
-    void paintErrorBox(
-        QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, const QColor& color, int line_width) const;
 
 private slots:
     void sl_closeEditor(QWidget* editor, QAbstractItemDelegate::EndEditHint hint);

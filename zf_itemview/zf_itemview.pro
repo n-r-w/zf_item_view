@@ -3,6 +3,10 @@ TARGET = zf_itemview
 QT += core gui widgets
 QT += core-private widgets-private gui-private
 
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += core5compat
+}
+
 CONFIG += silent
 TEMPLATE = lib
 

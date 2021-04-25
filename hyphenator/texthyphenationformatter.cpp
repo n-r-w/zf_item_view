@@ -43,7 +43,7 @@ QStringList TextHyphenationFormatter::splitHelper(const QString& text, int width
         return splittedLines;
     }
 
-    QStringList splittedByN = text.split(QStringLiteral("\n"), QString::SkipEmptyParts);
+    QStringList splittedByN = text.split(QStringLiteral("\n"), Qt::SkipEmptyParts);
     if (splittedByN.count() > 1) {
         // В строке уже есть переносы, заданные в ручную
         for (auto& s : splittedByN) {

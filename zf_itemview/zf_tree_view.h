@@ -105,8 +105,13 @@ public:
     //! I_ItemDelegateCheckInfo
     void delegateGetCheckInfo(QAbstractItemView* item_view, const QModelIndex& index, bool& show, bool& checked) const override;
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     //! Выводим в паблик
     using QTreeView::viewOptions;
+#else
+    //! Для совместимости с Qt5
+    QStyleOptionViewItem viewOptions() const;
+#endif
 
 protected:
     void paintEvent(QPaintEvent* event) override;

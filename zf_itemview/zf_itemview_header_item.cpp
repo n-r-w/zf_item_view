@@ -1508,7 +1508,7 @@ void HeaderItem::setSectionsSizes(const QMap<int, int>& sizes)
 
     bool changed = false;
     auto s_keys = sizes.keys();
-    QSet<int> not_used(s_keys.toSet());
+    QSet<int> not_used(s_keys.begin(), s_keys.end());
     for (auto h : items) {
         not_used.remove(h->sectionFrom());
 

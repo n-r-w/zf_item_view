@@ -25,7 +25,7 @@ HyphenatorFast::~HyphenatorFast()
 {
 }
 
-static const QChar _separator = 0;
+static const QChar _separator(0);
 
 QStringList HyphenatorFast::doHyphenateInternal(const QString& s)
 {
@@ -70,7 +70,7 @@ QStringList HyphenatorFast::doHyphenateInternal(const QString& s)
 QStringList HyphenatorFast::doHyphenate(const QString& s)
 {
     // Проверка на наличие дефисов. Если они есть, то заранее разделяем по ним слово
-    QStringList split = s.split('-', QString::SkipEmptyParts, Qt::CaseInsensitive);
+    QStringList split = s.split('-', Qt::SkipEmptyParts, Qt::CaseInsensitive);
 
     QStringList nodes;
     for (int i = 0; i < split.count(); i++) {

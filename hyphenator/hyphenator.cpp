@@ -31,7 +31,7 @@ Hyphenator::Hyphenator()
 
 void Hyphenator::hyphenate(HyphenatedPhrase& phrase)
 {
-    QStringList words = phrase.text().split(' ', QString::SkipEmptyParts, Qt::CaseSensitive);
+    QStringList words = phrase.text().split(' ', Qt::SkipEmptyParts, Qt::CaseSensitive);
     for (QStringList::ConstIterator s = words.constBegin(); s != words.constEnd(); s++) {
         phrase._hyphenatedWords.append(HyphenatedWord(*s));
         hyphenate(phrase._hyphenatedWords[phrase._hyphenatedWords.count() - 1]);

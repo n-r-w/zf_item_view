@@ -7,6 +7,10 @@
 #include "zf_itemview.h"
 #include "zf_itemview_header_model.h"
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+Q_DECLARE_OPAQUE_POINTER(zf::HeaderItem*)
+#endif
+
 namespace zf
 {
 class HeaderItem;

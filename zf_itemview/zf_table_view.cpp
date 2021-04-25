@@ -90,13 +90,14 @@ void CheckBoxPanel::paintEvent(QPaintEvent* e)
 
         const int gridHint = style()->styleHint(QStyle::SH_Table_GridLineColor, &grid_option, this);
         const QColor gridColor = static_cast<QRgb>(gridHint);
-        const QPen gridPen = QPen(gridColor, 0, _view->gridStyle());
+        QPen gridPen = QPen(gridColor, 0, _view->gridStyle());
+        gridPen.setCosmetic(true);
         painter.setPen(gridPen);
 
         if (_view->showGrid())
             painter.drawLine(1, rect.first.bottom(), width() - 1, rect.first.bottom());
 
-        painter.setPen(Utils::uiLineColor(true));
+        painter.setPen(Utils::pen(Utils::uiLineColor(true)));
         painter.drawLine(width() - 1, rect.first.top() - 1, width() - 1, rect.first.bottom());
         painter.restore();
     }
@@ -255,7 +256,12 @@ QPair<QRect, QRect> CheckBoxPanel::headerCheckboxRect() const
 QSize CheckBoxPanel::checkboxSize()
 {
     QStyleOptionButton check_option;
-    return (qApp->style()->sizeFromContents(QStyle::CT_CheckBox, &check_option, QSize()).expandedTo(QApplication::globalStrut()));
+    return (qApp->style()
+                ->sizeFromContents(QStyle::CT_CheckBox, &check_option, QSize())
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+                .expandedTo(QApplication::globalStrut())
+#endif
+    );
 }
 
 int CheckBoxPanel::cursorRow(const QPoint& c) const
@@ -751,11 +757,13 @@ void TableView::onColumnResized(int column, int oldWidth, int newWidth)
 {
     if (_request_resize)
         return;
+
     _request_resize = true;
     TableViewBase::onColumnResized(column, oldWidth, newWidth);
     updateFrozenTableGeometry();
     if (_frozen_table_view != nullptr)
         _frozen_table_view->onColumnResized(column, oldWidth, newWidth);
+
     _request_resize = false;
 }
 
@@ -1075,7 +1083,7 @@ void TableView::updateFrozenTableGeometry()
     if (_frozen_table_view->geometry() != rect)
         _frozen_table_view->setGeometry(rect);
 
-    _frozen_table_line->setGeometry(rect.right(), 0, _frozen_table_line->width(), rect.height() + 1);
+    QRect frozen_table_line_rect = rect;
 
     int top = viewport()->geometry().top() - vertShift;
     if (_frozen_table_view->viewport()->geometry().top() != top) {
@@ -1086,6 +1094,8 @@ void TableView::updateFrozenTableGeometry()
 
     if (_frozen_table_view->horizontalHeader()->minimumHeight() != horizontalHeader()->height())
         _frozen_table_view->horizontalHeader()->setMinimumHeight(horizontalHeader()->height());
+
+    _frozen_table_line->setGeometry(frozen_table_line_rect.right(), 0, _frozen_table_line->width(), frozen_table_line_rect.height() + 1);
 }
 
 int TableView::frozenRightPos() const
@@ -1152,9 +1162,9 @@ void TableView::updateFrozenCount()
         if (_frozen_table_view == nullptr) {
             _frozen_table_line = new QFrame(this);
             _frozen_table_line->setObjectName("frozen_table_line");
-
-            _frozen_table_line->setFrameShape(QFrame::VLine);
-            _frozen_table_line->setFrameShadow(QFrame::Plain);
+            _frozen_table_line->setStyleSheet("QFrame {border: 1px solid black}");
+            //            _frozen_table_line->setFrameShape(QFrame::VLine);
+            //            _frozen_table_line->setFrameShadow(QFrame::Plain);
             _frozen_table_line->setGeometry(0, 0, 1, 1);
             _frozen_table_line->setAttribute(Qt::WA_TransparentForMouseEvents);
 

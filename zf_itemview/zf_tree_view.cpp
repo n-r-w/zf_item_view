@@ -177,6 +177,15 @@ void TreeView::delegateGetCheckInfo(QAbstractItemView* item_view, const QModelIn
     checked = isCellChecked(index);
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+QStyleOptionViewItem TreeView::viewOptions() const
+{
+    QStyleOptionViewItem opt;
+    initViewItemOption(&opt);
+    return opt;
+}
+#endif
+
 void TreeView::paintEvent(QPaintEvent* event)
 {
     QTreeView::paintEvent(event);
