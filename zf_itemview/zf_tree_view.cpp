@@ -520,10 +520,10 @@ void TreeView::checkRow(const QModelIndex& index, bool checked)
             QModelIndexList all_indexes;
             Utils::getAllIndexes(Utils::getTopSourceModel(model()), all_indexes);
 
-            for (auto idx : qAsConst(all_indexes)) {
+            for (auto& idx : qAsConst(all_indexes)) {
                 if (source_index == idx)
                     continue;
-                _checked << source_index;
+                _checked << idx;
             }
             _all_checked = false;
 
@@ -542,12 +542,12 @@ QSet<QModelIndex> TreeView::checkedRows() const
     if (isAllRowsChecked() && _checked.isEmpty()) {
         QModelIndexList all_indexes;
         Utils::getAllIndexes(Utils::getTopSourceModel(model()), all_indexes);
-        for (auto idx : qAsConst(all_indexes)) {
+        for (auto& idx : qAsConst(all_indexes)) {
             res << idx;
         }
 
     } else {
-        for (auto idx : qAsConst(_checked)) {
+        for (auto& idx : qAsConst(_checked)) {
             res << idx;
         }
     }
