@@ -31,6 +31,7 @@ public:
     void mouseMoveEvent(QMouseEvent* e) override;
     void mousePressEvent(QMouseEvent* e) override;
     void mouseReleaseEvent(QMouseEvent* e) override;
+    void wheelEvent(QWheelEvent* event) override;
 
     //! Ширина панели
     static int width();

@@ -169,6 +169,11 @@ void CheckBoxPanel::mouseReleaseEvent(QMouseEvent* e)
     _ignore_group_check = false;
 }
 
+void CheckBoxPanel::wheelEvent(QWheelEvent* event)
+{
+    qApp->sendEvent(_view->viewport(), event);
+}
+
 int CheckBoxPanel::width()
 {
     return checkboxSize().width() + 10;
