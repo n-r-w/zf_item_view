@@ -21,6 +21,7 @@
 #include <float.h>
 #include <QTextOption>
 #include <QTextLayout>
+#include <QStylePainter>
 
 #include "zf_utils.h"
 #include "zf_html_tools.h"
@@ -319,7 +320,8 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
             painter->fillRect(opt.rect, opt.backgroundBrush);
             painter->restore();
 
-            style->drawControl(QStyle::ControlElement::CE_CheckBox, &check_option, painter);
+            style->drawControl(QStyle::ControlElement::CE_CheckBox, &check_option, painter, opt.widget);
+
             painter->restore();
 
             check_shift += check_rect_expanded.width();
@@ -551,12 +553,12 @@ void ItemDelegate::paintCellContent(QStyle *style, QPainter *p, const QStyleOpti
                 cg = QPalette::Inactive;
 
             if (opt->state & QStyle::State_Selected) {
-                p->setPen(Utils::pen(opt->palette.color(cg, QPalette::HighlightedText)));
+                p->setPen(opt->palette.color(cg, QPalette::HighlightedText));
             } else {
-                p->setPen(Utils::pen(opt->palette.color(cg, QPalette::Text)));
+                p->setPen(opt->palette.color(cg, QPalette::Text));
             }
             if (opt->state & QStyle::State_Editing) {
-                p->setPen(Utils::pen(opt->palette.color(cg, QPalette::Text)));
+                p->setPen(opt->palette.color(cg, QPalette::Text));
                 p->drawRect(textRect.adjusted(0, 0, -1, -1));
             }
 

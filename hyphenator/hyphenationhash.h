@@ -66,7 +66,13 @@ public:
     QStringList doHyphenate(const QString& s);
 
 private:
-    QMultiHash<uint, HashData> _hash;
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    typedef uint HASH_KEY_TYPE;
+#else
+    typedef size_t HASH_KEY_TYPE;
+#endif
+
+    QMultiHash<HASH_KEY_TYPE, HashData> _hash;
     Hyphenator* _hyphenator;
 };
 
