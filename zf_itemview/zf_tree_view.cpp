@@ -309,6 +309,12 @@ void TreeView::mouseDoubleClickEvent(QMouseEvent* e)
     QTreeView::mouseDoubleClickEvent(e);
 }
 
+void TreeView::scrollContentsBy(int dx, int dy)
+{
+    QTreeView::scrollContentsBy(dx, dy);
+    _check_panel->update();
+}
+
 void TreeView::selectColumn(int column)
 {
     if (selectionBehavior() == QTreeView::SelectRows

@@ -83,6 +83,7 @@ void MainWindow::on_frozen_clicked()
 void MainWindow::on_check_panel_clicked()
 {
     _table_view->showCheckRowPanel(!_table_view->isShowCheckRowPanel());
+    _tree_view->showCheckPanel(!_tree_view->isShowCheckPanel());
 }
 
 void MainWindow::on_check_cell_clicked()

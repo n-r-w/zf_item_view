@@ -116,6 +116,7 @@ protected:
     bool eventFilter(QObject* object, QEvent* event) override;
     void mousePressEvent(QMouseEvent* e) override;
     void mouseDoubleClickEvent(QMouseEvent* e) override;
+    void scrollContentsBy(int dx, int dy) override;
 
 signals:
     //! Изменилось выделение чекбоксами

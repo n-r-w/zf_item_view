@@ -24,6 +24,7 @@ void TreeCheckBoxPanel::paintEvent(QPaintEvent* e)
         return;
 
     QStylePainter painter(this);
+    painter.setClipRect(0, 0, _view->width(), _view->height() - 1);
 
     QStyleOptionButton check_option;
     auto rects = checkboxRects();
@@ -133,6 +134,11 @@ void TreeCheckBoxPanel::mouseReleaseEvent(QMouseEvent* e)
     _ignore_group_check = false;
 }
 
+void TreeCheckBoxPanel::wheelEvent(QWheelEvent* event)
+{
+    qApp->sendEvent(_view->viewport(), event);
+}
+
 int TreeCheckBoxPanel::width()
 {
     return checkboxSize().width() + 10;
@@ -154,32 +160,34 @@ QList<QPair<QRect, QRect>> TreeCheckBoxPanel::checkboxRects() const
     bool found = false;
 
     for (QModelIndex visual_index = first_visual_index; visual_index.isValid();) {
-        QRect cell_rect = _view->visualRect(visual_index);
+        if (!visual_index.parent().isValid() || _view->isExpanded(visual_index.parent())) {
+            QRect cell_rect = _view->visualRect(visual_index);
 
-        if (cell_rect.isNull())
-            break;
-
-        QPair<QRect, QRect> rects;
-
-        cell_rect.adjust(0, offset, 0, offset);
-        rects.first = cell_rect;
-
-        cell_rect.setLeft((width() - check_size.width()) / 2);
-        cell_rect.setRight(cell_rect.left() + check_size.width());
-
-        int cell_height = cell_rect.height();
-        cell_rect.setTop(cell_rect.top() + (cell_height - check_size.height()) / 2);
-        cell_rect.setBottom(cell_rect.top() + check_size.height());
-        rects.second = cell_rect;
-
-        if (_view->viewport()->geometry().top() > rects.first.bottom() || _view->viewport()->geometry().bottom() < rects.first.top()) {
-            // возвращаем только видимые части
-            if (found)
+            if (cell_rect.isNull())
                 break;
 
-        } else {
-            res << rects;
-            found = true;
+            QPair<QRect, QRect> rects;
+
+            cell_rect.adjust(0, offset, 0, offset);
+            rects.first = cell_rect;
+
+            cell_rect.setLeft((width() - check_size.width()) / 2);
+            cell_rect.setRight(cell_rect.left() + check_size.width());
+
+            int cell_height = cell_rect.height();
+            cell_rect.setTop(cell_rect.top() + (cell_height - check_size.height()) / 2);
+            cell_rect.setBottom(cell_rect.top() + check_size.height());
+            rects.second = cell_rect;
+
+            if (_view->viewport()->geometry().top() > rects.first.bottom() || _view->viewport()->geometry().bottom() < rects.first.top()) {
+                // возвращаем только видимые части
+                if (found)
+                    break;
+
+            } else {
+                res << rects;
+                found = true;
+            }
         }
 
         visual_index = Utils::getNextItemModelIndex(visual_index, true);
