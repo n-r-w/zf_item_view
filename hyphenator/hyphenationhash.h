@@ -69,7 +69,7 @@ private:
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     typedef uint HASH_KEY_TYPE;
 #else
-    typedef size_t HASH_KEY_TYPE;
+    typedef qulonglong HASH_KEY_TYPE;
 #endif
 
     QMultiHash<HASH_KEY_TYPE, HashData> _hash;
@@ -105,4 +105,5 @@ private:
 
 QDataStream& operator<<(QDataStream& stream, const HyphenationHash::HashData& data);
 QDataStream& operator>>(QDataStream& stream, HyphenationHash::HashData& data);
+
 } // namespace Hyphenation
