@@ -22,8 +22,9 @@ HyphenatedWord HyphenationHash::findWord(const QString& text)
 
     HASH_KEY_TYPE hashValue = qHash(text);
 
+    auto hashed = _hash.values(hashValue);
     // Проверяем что выдал запрос по хэшу
-    for (QMultiHash<HASH_KEY_TYPE, HashData>::iterator i = _hash.begin(); i != _hash.end(); ++i) {
+    for (auto i = hashed.begin(); i != hashed.end(); ++i) {
         if (QString::compare(i->word().text(), t, Qt::CaseSensitive) == 0) {
             i->setCurrentDate();
             return i->word();
@@ -65,7 +66,7 @@ bool HyphenationHash::loadFromFile(QFile& file)
 
 void HyphenationHash::clearOldHash(const QDate& date)
 {
-    QMultiHash<HASH_KEY_TYPE, HashData>::iterator i = _hash.begin();
+    auto i = _hash.begin();
     while (i != _hash.end()) {
         if (i->dateUsed() < date) {
             i = _hash.erase(i);
