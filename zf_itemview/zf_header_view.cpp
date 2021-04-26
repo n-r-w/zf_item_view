@@ -16,6 +16,7 @@
 #include <QTimer>
 #include <limits>
 #include <QScrollBar>
+#include <QTextDocument>
 
 #define UPDATE_JOINED_PROPERTIES_EVENT (QEvent::User + 10000)
 
@@ -44,8 +45,15 @@ HeaderView::HeaderView(Qt::Orientation orientation, QWidget* parent)
         setSortIndicator(-1, Qt::AscendingOrder);
     } else {
         setVisible(false);
-        setMinimumSectionSize(qMax(22, qApp->fontMetrics().xHeight() + 4));
-        setDefaultSectionSize(qMax(22, qApp->fontMetrics().xHeight() + 4));
+
+        QTextDocument doc;
+        doc.setPlainText("X");
+
+        int default_row_height = qMax(int(doc.size().height()) + 1, qApp->fontMetrics().xHeight() + 4);
+        default_row_height = qMax(22, default_row_height);
+
+        setMinimumSectionSize(default_row_height);
+        setDefaultSectionSize(default_row_height);
     }
 
     connect(this, &QHeaderView::sectionResized, this, &HeaderView::sl_sectionResized);

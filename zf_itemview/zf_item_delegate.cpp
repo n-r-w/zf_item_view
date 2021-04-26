@@ -375,7 +375,7 @@ QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInd
         if (_use_html && HtmlTools::isHtml(opt.text)) {
             QTextDocument doc;
             initTextDocument(&opt, index, doc);
-            size = QSize(doc.idealWidth(), doc.size().height());
+            size = QSize(doc.size().width(), doc.size().height()); //QSize(doc.idealWidth(), doc.size().height());
         } else {
             size = HintItemDelegate::sizeHint(opt, index);
         }
@@ -584,13 +584,10 @@ void ItemDelegate::paintCellContent(QStyle *style, QPainter *p, const QStyleOpti
 
 void ItemDelegate::viewItemDrawText(QStyle* style, QPainter *p, const QStyleOptionViewItem *option, const QRect &rect) const
 {
-    const QWidget *widget = option->widget;
+    const QWidget* widget = option->widget;
     const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1;
 
     QRect textRect = rect.adjusted(textMargin, 0, -textMargin, 0); // remove width padding
-
-    QTextDocument doc;
-    initTextDocument(option, option->index, doc);
 
     // Рисуем иконку
     if (!option->icon.isNull()) {
@@ -604,6 +601,9 @@ void ItemDelegate::viewItemDrawText(QStyle* style, QPainter *p, const QStyleOpti
     p->translate(textRect.topLeft());
     QRect clip = textRect.translated(-textRect.topLeft());
     p->setClipRect(clip);
+
+    QTextDocument doc;
+    initTextDocument(option, option->index, doc);
 
     QAbstractTextDocumentLayout::PaintContext ctx;
     ctx.clip = clip;
@@ -623,6 +623,11 @@ void ItemDelegate::viewItemDrawText(QStyle* style, QPainter *p, const QStyleOpti
     // Рисуем текст без обводной линии
     doc.documentLayout()->draw(p, ctx);
     p->restore();
+
+    if (option->rect.width() < doc.size().width() || option->rect.height() < doc.size().height()) {
+        // отрисовка многоточия
+        p->drawText(option->rect.adjusted(0, 0, -1, 2), Qt::AlignRight | Qt::AlignBottom, "...");
+    }
 }
 
 void ItemDelegate::initTextDocument(const QStyleOptionViewItem* option, const QModelIndex& index, QTextDocument& doc) const

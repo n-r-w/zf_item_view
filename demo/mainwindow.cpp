@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
     _table_model.setRowCount(ROW_COUNT);
     for (int row = 0; row < ROW_COUNT; row++) {
         for (int col = 0; col < COL_COUNT; col++) {
-            _table_model.setData(_table_model.index(row, col), QString("Row %1, Column %2").arg(row + 1).arg(col + 1), Qt::EditRole);
+            _table_model.setData(_table_model.index(row, col), QString("Row <b>%1</b>, <i>Column %2</i>").arg(row + 1).arg(col + 1),
+                                 Qt::EditRole);
         }
     }
 
