@@ -479,7 +479,9 @@ void TableView::setModel(QAbstractItemModel* model)
         disconnect(this->model(), &QAbstractItemModel::layoutChanged, this, &TableView::sl_layoutChanged);
         disconnect(this->model(), &QAbstractItemModel::rowsRemoved, this, &TableView::sl_rowsRemoved);
         disconnect(this->model(), &QAbstractItemModel::rowsInserted, this, &TableView::sl_rowsInserted);
-    } else {
+    }
+
+    if (model != nullptr) {
         connect(model, &QAbstractItemModel::layoutChanged, this, &TableView::sl_layoutChanged);
         connect(model, &QAbstractItemModel::rowsRemoved, this, &TableView::sl_rowsRemoved);
         connect(model, &QAbstractItemModel::rowsInserted, this, &TableView::sl_rowsInserted);
