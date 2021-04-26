@@ -71,6 +71,10 @@ private:
     //! Перемещение колонки разрешено
     bool dragAllowed() const { return _drag_allowed; }
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 11, 0))
+    bool isFirstSectionMovable() const;
+#endif
+
 signals:
     //! Колонки горизонтального заголовка перемещаются через Drag&Drop
     void sg_columnsDragging(

@@ -343,7 +343,15 @@ QIcon HeaderItem::icon() const
 
 HeaderItem* HeaderItem::setDefaultSectionSizeCharCount(int c)
 {
-    return setDefaultSectionSize(fontMetrics().horizontalAdvance(AVERAGE_CHAR) * c + margin() * 2);
+    return setDefaultSectionSize(fontMetrics().
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                                     horizontalAdvance
+#else
+                                     width
+#endif
+                                     (AVERAGE_CHAR)
+                                     * c
+                                 + margin() * 2);
 }
 
 HeaderItem* HeaderItem::setDefaultSectionSize(int sectionSize)
@@ -368,7 +376,15 @@ HeaderItem* HeaderItem::setSectionSizeCharCount(int c)
 {
     Q_ASSERT(orientation() == Qt::Horizontal);
 
-    return setSectionSize(fontMetrics().horizontalAdvance(AVERAGE_CHAR) * c + margin() * 2);
+    return setSectionSize(fontMetrics().
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                              horizontalAdvance
+#else
+                              width
+#endif
+                              (AVERAGE_CHAR)
+                              * c
+                          + margin() * 2);
 }
 
 HeaderItem* HeaderItem::setSectionSize(int width)
@@ -398,7 +414,15 @@ HeaderItem* HeaderItem::setVerticalCellWidth(int size)
 
 HeaderItem* HeaderItem::setVerticalCellCharCount(int c)
 {
-    return setVerticalCellWidth(fontMetrics().horizontalAdvance(AVERAGE_CHAR) * c + margin() * 2);
+    return setVerticalCellWidth(fontMetrics().
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                                    horizontalAdvance
+#else
+                                    width
+#endif
+                                    (AVERAGE_CHAR)
+                                    * c
+                                + margin() * 2);
 }
 
 HeaderItem* HeaderItem::setResizeMode(QHeaderView::ResizeMode mode)
@@ -1508,7 +1532,12 @@ void HeaderItem::setSectionsSizes(const QMap<int, int>& sizes)
 
     bool changed = false;
     auto s_keys = sizes.keys();
-    QSet<int> not_used(s_keys.begin(), s_keys.end());
+    QSet<int> not_used
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+        (s_keys.begin(), s_keys.end());
+#else
+        (s_keys.toSet());
+#endif
     for (auto h : items) {
         not_used.remove(h->sectionFrom());
 

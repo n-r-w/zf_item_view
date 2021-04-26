@@ -5,7 +5,20 @@
 
 #include <QString>
 #include <QColor>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
 #include <QRecursiveMutex>
+#else
+#include <QMutex>
+
+class QRecursiveMutex : public QMutex
+{
+public:
+    QRecursiveMutex()
+        : QMutex(QMutex::Recursive)
+    {
+    }
+};
+#endif
 
 #include "zf_itemview.h"
 

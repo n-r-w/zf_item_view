@@ -7,6 +7,7 @@
 #include "zf_error.h"
 
 #include <QTreeView>
+#include <memory>
 
 class QTreeViewPrivate;
 

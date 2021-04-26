@@ -543,6 +543,13 @@ bool TableViewBase::viewportEvent(QEvent* event)
                 return QAbstractScrollArea::viewportEvent(event);
             break;
         }
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 2))
+        // иначе проблемы при первом отображении и активированном shrink
+        case QEvent::Resize:
+            updateGeometry();
+            break;
+#endif
+
         case QEvent::HoverEnter:
         case QEvent::HoverLeave:
         case QEvent::HoverMove: {

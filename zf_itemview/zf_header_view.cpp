@@ -1366,4 +1366,11 @@ void HeaderView::sl_autoSearchTextChanged(const QString&)
     viewport()->update();
 }
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 11, 0))
+bool HeaderView::isFirstSectionMovable() const
+{
+    return parent() != nullptr && qobject_cast<QTreeView*>(parent()) == nullptr;
+}
+#endif
+
 } // namespace zf

@@ -70,26 +70,21 @@ QStringList HyphenatorFast::doHyphenateInternal(const QString& s)
 QStringList HyphenatorFast::doHyphenate(const QString& s)
 {
     // Проверка на наличие дефисов. Если они есть, то заранее разделяем по ним слово
-    QStringList split = s.split('-', Qt::SkipEmptyParts, Qt::CaseInsensitive);
+    QStringList split = s.split('-',
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                                Qt::SkipEmptyParts
+#else
+                                QString::SkipEmptyParts
+#endif
+                                ,
+                                Qt::CaseInsensitive);
 
     QStringList nodes;
     for (int i = 0; i < split.count(); i++) {
         if (i != split.count() - 1) {
-#if QT_VERSION >= 0x040500
             nodes.append(doHyphenateInternal(split.at(i) + '-'));
-#else
-            foreach (QString s, doHyphenateInternal(split.at(i) + '-')) {
-                nodes.append(s);
-            }
-#endif
         } else {
-#if QT_VERSION >= 0x040500
             nodes.append(doHyphenateInternal(split.at(i)));
-#else
-            foreach (QString s, doHyphenateInternal(split.at(i))) {
-                nodes.append(s);
-            }
-#endif
         }
     }
     return nodes;

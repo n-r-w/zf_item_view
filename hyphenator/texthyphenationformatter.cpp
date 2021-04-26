@@ -43,7 +43,13 @@ QStringList TextHyphenationFormatter::splitHelper(const QString& text, int width
         return splittedLines;
     }
 
-    QStringList splittedByN = text.split(QStringLiteral("\n"), Qt::SkipEmptyParts);
+    QStringList splittedByN = text.split(QStringLiteral("\n"),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                                         Qt::SkipEmptyParts
+#else
+                                         QString::SkipEmptyParts
+#endif
+    );
     if (splittedByN.count() > 1) {
         // В строке уже есть переносы, заданные в ручную
         for (auto& s : splittedByN) {
@@ -83,14 +89,26 @@ QStringList TextHyphenationFormatter::splitHelper(const QString& text, int width
         // то находим какая еще часть неразбитого по строкам текста влезает в линию
         restText = restText.trimmed();
         int tempMaxWidth = qMin(maxWidth, restText.length());
-        int realPixelWidth = fontMetrics.horizontalAdvance(restText, tempMaxWidth);
+        int realPixelWidth = fontMetrics.
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                             horizontalAdvance
+#else
+                             width
+#endif
+                             (restText, tempMaxWidth);
         while (realPixelWidth > width) {
             tempMaxWidth--;
             if (restText.at(tempMaxWidth - 1) == ' ') {
                 // Исключаем пробелы между словами
                 tempMaxWidth--;
             }
-            realPixelWidth = fontMetrics.horizontalAdvance(restText, tempMaxWidth);
+            realPixelWidth = fontMetrics.
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                             horizontalAdvance
+#else
+                             width
+#endif
+                             (restText, tempMaxWidth);
             if (tempMaxWidth <= 1) {
                 tempMaxWidth = 1;
                 break;
@@ -169,7 +187,14 @@ QStringList TextHyphenationFormatter::splitHelper(const QString& text, int width
                     tempPart = hyphenation.at(i) + '-';
                 }
                 // Замеряем влезает ли
-                if (fontMetrics.horizontalAdvance(leftText + tempPart) > width) {
+                if (fontMetrics.
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                    horizontalAdvance
+#else
+                    width
+#endif
+                    (leftText + tempPart)
+                    > width) {
                     break;
                 }
                 leftText += hyphenation.at(i);
@@ -188,7 +213,15 @@ QStringList TextHyphenationFormatter::splitHelper(const QString& text, int width
                 continue;
             } else {
                 // Разбиение на слоги не помогает. Разрезанное слово не влезает даже по слогам - переносим полностью
-                if (leftPos == 0 || fontMetrics.horizontalAdvance(word) > width) {
+                if (leftPos == 0
+                    || fontMetrics.
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                           horizontalAdvance
+#else
+                           width
+#endif
+                           (word)
+                           > width) {
                     // Допустимая ширина не позволяет влезть слову целиком - режем слово
                     splittedLines.append(line.left(line.length()) + '-');
                     restText.remove(0, tempMaxWidth);
@@ -271,7 +304,13 @@ void TextHyphenationFormatter::draw(QPainter& p, const QPoint& pos, const QStrin
     int xPos = pos.x();
 
     for (int i = 0; i < text.count(); i++) {
-        int textWidth = p.fontMetrics().horizontalAdvance(text.at(i));
+        int textWidth = p.fontMetrics().
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                        horizontalAdvance
+#else
+                        width
+#endif
+                        (text.at(i));
         if (alignment & Qt::AlignRight) {
             xPos = pos.x() - textWidth;
         } else if (alignment & Qt::AlignCenter) {
@@ -320,7 +359,13 @@ void TextHyphenationFormatter::draw(QPainter& p, const QRect& rect, const QStrin
     }
 
     for (int i = 0; i < text.count(); i++) {
-        int width = p.fontMetrics().horizontalAdvance(text.at(i));
+        int width = p.fontMetrics().
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                    horizontalAdvance
+#else
+                    width
+#endif
+                    (text.at(i));
         if (alignment & Qt::AlignLeft) {
             xPos = rect.x();
         } else if (alignment & Qt::AlignRight) {
@@ -392,7 +437,15 @@ TextHyphenationFormatter* GlobalTextHyphenationFormatter::formatter()
 
 QString GlobalTextHyphenationFormatter::stringToMultiline(const QFontMetrics& fm, const QString& value, int width)
 {
-    width = qMax(fm.horizontalAdvance('W') * 4, width);
+    width = qMax(fm.
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                     horizontalAdvance
+#else
+                     width
+#endif
+                     ('W')
+                     * 4,
+                 width);
     QString v = value;
     v.replace('\n', ' ');
 
