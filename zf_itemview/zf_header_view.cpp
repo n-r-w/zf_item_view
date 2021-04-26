@@ -880,12 +880,10 @@ void HeaderView::reloadDataFromRootItemHelper()
                     continue;
             }
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-            // тут специально не используется QMultiMap
-            sizes.unite(getSectionsSizes(i, -1));
-#else
-            sizes.insert(getSectionsSizes(i, -1));
-#endif
+            auto new_sizes = getSectionsSizes(i, -1);
+            for (auto i = new_sizes.constBegin(); i != new_sizes.constEnd(); ++i) {
+                sizes.insert(i.key(), i.value());
+            }
 
             if (i < rootItem()->sectionSpan()) {
                 if (parentWidget() != nullptr)
