@@ -508,6 +508,27 @@ bool HeaderItem::isHidden() const
     return _is_hidden || _is_permananet_hidden;
 }
 
+HeaderItem* HeaderItem::setMovable(bool b)
+{
+    if (_is_movable == b && isBottom())
+        return {};
+
+    _is_movable = b;
+
+    if (!isBottom()) {
+        for (HeaderItem* h : qAsConst(_children)) {
+            h->setMovable(b);
+        }
+    }
+
+    return this;
+}
+
+bool HeaderItem::isMovable() const
+{
+    return _is_movable;
+}
+
 static const int _header_item_structure_version = 1;
 QByteArray HeaderItem::toByteArray(int data_stream_version) const
 {
@@ -541,6 +562,7 @@ void HeaderItem::toByteArrayHelper(QDataStream& ds) const
         ds << _icon;
         ds << static_cast<int>(_resize_mode);
         ds << _is_hidden;
+        ds << _is_movable;
         ds << _is_permananet_hidden;
     }
 
@@ -598,6 +620,9 @@ void HeaderItem::fromByteArrayHelper(QDataStream& ds)
 
         ds >> bool_v;
         item->setHidden(bool_v);
+
+        ds >> bool_v;
+        item->setMovable(bool_v);
 
         ds >> bool_v;
         item->setPermanentHidden(bool_v);

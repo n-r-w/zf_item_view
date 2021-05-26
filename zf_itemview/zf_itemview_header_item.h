@@ -137,6 +137,10 @@ public:
     HeaderItem* hide() { return setHidden(true); }
     bool isHidden() const;
 
+    //! Разрешить/запретить перенос колонок пользователем
+    HeaderItem* setMovable(bool b);
+    bool isMovable() const;
+
     //! Скопировать дочернюю структуру в QByteArray
     QByteArray toByteArray(int data_stream_version = QDataStream::Qt_5_6) const;
     //! Восстановить дочернюю структуру из QByteArray
@@ -542,6 +546,7 @@ private:
     QHeaderView::ResizeMode _resize_mode = QHeaderView::Interactive;
     bool _is_hidden = false;
     bool _is_permananet_hidden = false;
+    bool _is_movable = true;
 
     //! Размер в пикселях всего заголовка по направлению уровней (от начального до конечного уровня)
     int _level_size = 0;

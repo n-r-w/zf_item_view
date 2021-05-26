@@ -706,7 +706,7 @@ void HeaderView::mousePressEvent(QMouseEvent* event)
     if (event->button() == Qt::LeftButton && orientation() == Qt::Horizontal
         && QApplication::keyboardModifiers() == Qt::NoModifier) {
         // тащим заголовок
-        if (sectionsMovable() && info->col_span_hidden >= 0
+        if (sectionsMovable() && info->header_item->isMovable() && info->col_span_hidden >= 0
             && info->col_span_hidden <= count() - hiddenSectionCount()) {
             if (isFirstSectionMovable() || info->col_span_from > 0) {
                 // начало перетаскивания заголовка

@@ -75,11 +75,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::configureHeader(zf::HeaderItem* parent)
 {
-    for (int col = 0; col < COL_COUNT; col++) {
+    for (int col = 0; col < COL_COUNT / 2; col++) {
         QString h_name = (col == 2 ? "The quick brown fox jumps over a lazy dog" : QString("Header %1").arg(col + 1));
         zf::HeaderItem* item = parent->append(h_name);
         item->append("Child header 1");
-        item->append("Child header 2");
+
+        if (parent->bottomCount() == 3) {
+            item->append("Not movable")->setMovable(false);
+        } else {
+            item->append("Child header 2");
+        }
     }
 }
 
