@@ -59,6 +59,20 @@ void TreeView::setModel(QAbstractItemModel* model)
     if (model == this->model())
         return;
 
+    if (this->model() != nullptr) {
+        disconnect(this->model(), &QAbstractItemModel::layoutChanged, this, &TreeView::sl_layoutChanged);
+        disconnect(this->model(), &QAbstractItemModel::rowsRemoved, this, &TreeView::sl_rowsRemoved);
+        disconnect(this->model(), &QAbstractItemModel::rowsInserted, this, &TreeView::sl_rowsInserted);
+        disconnect(this->model(), &QAbstractItemModel::modelReset, this, &TreeView::sl_modelReset);
+    }
+
+    if (model != nullptr) {
+        connect(model, &QAbstractItemModel::layoutChanged, this, &TreeView::sl_layoutChanged);
+        connect(model, &QAbstractItemModel::rowsRemoved, this, &TreeView::sl_rowsRemoved);
+        connect(model, &QAbstractItemModel::rowsInserted, this, &TreeView::sl_rowsInserted);
+        connect(model, &QAbstractItemModel::modelReset, this, &TreeView::sl_modelReset);
+    }
+
     _checked.clear();
     _all_checked = false;
 
@@ -164,6 +178,7 @@ void TreeView::updateGeometries()
     QAbstractItemView::updateGeometries();
 
     _check_panel->setGeometry(0, 0, left_panel_width, geometry().height());
+    _check_panel->update();
 }
 
 void TreeView::delegateGetCheckInfo(QAbstractItemView* item_view, const QModelIndex& index, bool& show, bool& checked) const
@@ -391,6 +406,32 @@ void TreeView::sl_collapsed(const QModelIndex& index)
     Q_UNUSED(index)
     if (isShowCheckRowPanel())
         _check_panel->update();
+}
+
+void TreeView::sl_layoutChanged()
+{
+    _check_panel->update();
+}
+
+void TreeView::sl_rowsRemoved(const QModelIndex& parent, int first, int last)
+{
+    Q_UNUSED(parent);
+    Q_UNUSED(first);
+    Q_UNUSED(last);
+    _check_panel->update();
+}
+
+void TreeView::sl_rowsInserted(const QModelIndex& parent, int first, int last)
+{
+    Q_UNUSED(parent);
+    Q_UNUSED(first);
+    Q_UNUSED(last);
+    _check_panel->update();
+}
+
+void TreeView::sl_modelReset()
+{
+    _check_panel->update();
 }
 
 QTreeViewPrivate* TreeView::privatePtr() const

@@ -468,6 +468,7 @@ void TableView::updateGeometries()
     TableViewBase::updateGeometries();
 
     _check_panel->setGeometry(0, 0, leftPanelWidth(), geometry().height());
+    _check_panel->update();
 }
 
 void TableView::setModel(QAbstractItemModel* model)
@@ -479,12 +480,14 @@ void TableView::setModel(QAbstractItemModel* model)
         disconnect(this->model(), &QAbstractItemModel::layoutChanged, this, &TableView::sl_layoutChanged);
         disconnect(this->model(), &QAbstractItemModel::rowsRemoved, this, &TableView::sl_rowsRemoved);
         disconnect(this->model(), &QAbstractItemModel::rowsInserted, this, &TableView::sl_rowsInserted);
+        disconnect(this->model(), &QAbstractItemModel::modelReset, this, &TableView::sl_modelReset);
     }
 
     if (model != nullptr) {
         connect(model, &QAbstractItemModel::layoutChanged, this, &TableView::sl_layoutChanged);
         connect(model, &QAbstractItemModel::rowsRemoved, this, &TableView::sl_rowsRemoved);
         connect(model, &QAbstractItemModel::rowsInserted, this, &TableView::sl_rowsInserted);
+        connect(model, &QAbstractItemModel::modelReset, this, &TableView::sl_modelReset);
     }
 
     _checked.clear();
@@ -1024,6 +1027,11 @@ void TableView::sl_rowsInserted(const QModelIndex& parent, int first, int last)
         _checked = update_checked;
     }
 
+    _check_panel->update();
+}
+
+void TableView::sl_modelReset()
+{
     _check_panel->update();
 }
 

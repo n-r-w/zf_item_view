@@ -164,6 +164,11 @@ private slots:
     void sl_expanded(const QModelIndex& index);
     void sl_collapsed(const QModelIndex& index);
 
+    void sl_layoutChanged();
+    void sl_rowsRemoved(const QModelIndex& parent, int first, int last);
+    void sl_rowsInserted(const QModelIndex& parent, int first, int last);
+    void sl_modelReset();
+
 private:
     void init();
     void selectColumnHelper(QItemSelection& selection, int column, const QModelIndex& parent);

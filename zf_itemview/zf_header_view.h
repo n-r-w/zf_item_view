@@ -212,7 +212,7 @@ private:
      * колонка=секция, для вертикального - строка=секция, колонка=уровень */
     struct CellInfo
     {
-        const HeaderView* header_view;
+        const HeaderView* header_view = nullptr;
 
         HeaderItem* header_item = nullptr;
 

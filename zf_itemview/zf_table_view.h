@@ -191,6 +191,7 @@ private slots:
     void sl_layoutChanged();
     void sl_rowsRemoved(const QModelIndex& parent, int first, int last);
     void sl_rowsInserted(const QModelIndex& parent, int first, int last);
+    void sl_modelReset();
 
 private:
     using TableViewBase::onColumnResized;
