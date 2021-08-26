@@ -71,7 +71,7 @@ void TreeView::setModel(QAbstractItemModel* model)
         connect(model, &QAbstractItemModel::layoutChanged, this, &TreeView::sl_layoutChanged);
         connect(model, &QAbstractItemModel::rowsRemoved, this, &TreeView::sl_rowsRemoved);
         connect(model, &QAbstractItemModel::rowsInserted, this, &TreeView::sl_rowsInserted);
-        connect(this->model(), &QAbstractItemModel::rowsMoved, this, &TreeView::sl_rowsMoved);
+        connect(model, &QAbstractItemModel::rowsMoved, this, &TreeView::sl_rowsMoved);
         connect(model, &QAbstractItemModel::modelReset, this, &TreeView::sl_modelReset);
     }
 
