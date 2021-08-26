@@ -63,6 +63,7 @@ void TreeView::setModel(QAbstractItemModel* model)
         disconnect(this->model(), &QAbstractItemModel::layoutChanged, this, &TreeView::sl_layoutChanged);
         disconnect(this->model(), &QAbstractItemModel::rowsRemoved, this, &TreeView::sl_rowsRemoved);
         disconnect(this->model(), &QAbstractItemModel::rowsInserted, this, &TreeView::sl_rowsInserted);
+        disconnect(this->model(), &QAbstractItemModel::rowsMoved, this, &TreeView::sl_rowsMoved);
         disconnect(this->model(), &QAbstractItemModel::modelReset, this, &TreeView::sl_modelReset);
     }
 
@@ -70,6 +71,7 @@ void TreeView::setModel(QAbstractItemModel* model)
         connect(model, &QAbstractItemModel::layoutChanged, this, &TreeView::sl_layoutChanged);
         connect(model, &QAbstractItemModel::rowsRemoved, this, &TreeView::sl_rowsRemoved);
         connect(model, &QAbstractItemModel::rowsInserted, this, &TreeView::sl_rowsInserted);
+        connect(this->model(), &QAbstractItemModel::rowsMoved, this, &TreeView::sl_rowsMoved);
         connect(model, &QAbstractItemModel::modelReset, this, &TreeView::sl_modelReset);
     }
 
@@ -429,8 +431,21 @@ void TreeView::sl_rowsInserted(const QModelIndex& parent, int first, int last)
     _check_panel->update();
 }
 
+void TreeView::sl_rowsMoved(const QModelIndex& parent, int start, int end, const QModelIndex& destination, int row)
+{
+    Q_UNUSED(parent);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
+    Q_UNUSED(destination);
+    Q_UNUSED(row);
+
+    _checked.clear();
+    _check_panel->update();
+}
+
 void TreeView::sl_modelReset()
 {
+    _checked.clear();
     _check_panel->update();
 }
 

@@ -480,6 +480,7 @@ void TableView::setModel(QAbstractItemModel* model)
         disconnect(this->model(), &QAbstractItemModel::layoutChanged, this, &TableView::sl_layoutChanged);
         disconnect(this->model(), &QAbstractItemModel::rowsRemoved, this, &TableView::sl_rowsRemoved);
         disconnect(this->model(), &QAbstractItemModel::rowsInserted, this, &TableView::sl_rowsInserted);
+        disconnect(this->model(), &QAbstractItemModel::rowsMoved, this, &TableView::sl_rowsMoved);
         disconnect(this->model(), &QAbstractItemModel::modelReset, this, &TableView::sl_modelReset);
     }
 
@@ -487,6 +488,7 @@ void TableView::setModel(QAbstractItemModel* model)
         connect(model, &QAbstractItemModel::layoutChanged, this, &TableView::sl_layoutChanged);
         connect(model, &QAbstractItemModel::rowsRemoved, this, &TableView::sl_rowsRemoved);
         connect(model, &QAbstractItemModel::rowsInserted, this, &TableView::sl_rowsInserted);
+        connect(this->model(), &QAbstractItemModel::rowsMoved, this, &TableView::sl_rowsMoved);
         connect(model, &QAbstractItemModel::modelReset, this, &TableView::sl_modelReset);
     }
 
@@ -1027,6 +1029,18 @@ void TableView::sl_rowsInserted(const QModelIndex& parent, int first, int last)
         _checked = update_checked;
     }
 
+    _check_panel->update();
+}
+
+void TableView::sl_rowsMoved(const QModelIndex& parent, int start, int end, const QModelIndex& destination, int row)
+{
+    Q_UNUSED(parent);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
+    Q_UNUSED(destination);
+    Q_UNUSED(row);
+
+    _checked.clear();
     _check_panel->update();
 }
 
