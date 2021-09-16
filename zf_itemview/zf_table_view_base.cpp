@@ -579,6 +579,11 @@ bool TableViewBase::viewportEvent(QEvent* event)
 
 bool TableViewBase::eventFilter(QObject* object, QEvent* event)
 {
+    if (object == horizontalScrollBar() && (event->type() == QEvent::Type::Show || event->type() == QEvent::Type::Hide)) {
+        if (isAutoShrink())
+            updateGeometry();
+    }
+
     return QTableView::eventFilter(object, event);
 }
 
@@ -713,6 +718,8 @@ void TableViewBase::init()
     // задаем свои скролбары для доступа к их протектед методам
     setVerticalScrollBar(new TableViewScrollBar(Qt::Orientation::Vertical, this));
     setHorizontalScrollBar(new TableViewScrollBar(Qt::Orientation::Horizontal, this));
+
+    horizontalScrollBar()->installEventFilter(this);
 
     // иначе не будет обновляться отрисовка фильтра и т.п. глюки
     connect(horizontalScrollBar(), &QScrollBar::valueChanged, this, [&]() { horizontalHeader()->viewport()->update(); });
