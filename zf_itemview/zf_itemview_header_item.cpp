@@ -841,7 +841,7 @@ int HeaderItem::bottomVisualPos(Qt::SortOrder order, bool visible_only) const
 {
     if (!isBottom())
         return -1;
-    return allBottomVisual(order, visible_only).indexOf(const_cast<HeaderItem*>(this));
+    return root()->allBottomVisual(order, visible_only).indexOf(const_cast<HeaderItem*>(this));
 }
 
 QList<HeaderItem*> HeaderItem::childrenVisual(Qt::SortOrder order, bool visible_only) const
