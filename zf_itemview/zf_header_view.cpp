@@ -1234,7 +1234,18 @@ void HeaderView::copyJoinedProperties()
         return;
 
     setSectionsMovable(joinedHeader()->sectionsMovable());
+
+    QList<int> sizes;
+    for (int i = 0; i < count(); i++) {
+        sizes << sectionSize(i);
+    }
+    // установка размера по умолчанию сбрасывает текущие размеры, зачем - загадка
     setDefaultSectionSize(joinedHeader()->defaultSectionSize());
+
+    for (int i = 0; i < count(); i++) {
+        if (sectionResizeMode(i) == QHeaderView::ResizeMode::Interactive)
+            resizeSection(i, sizes.at(i));
+    }
 }
 
 void HeaderView::takeDragDataFromJoined()
