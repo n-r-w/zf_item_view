@@ -912,6 +912,7 @@ void HeaderView::reloadDataFromRootItemHelper()
 
     emit sg_afterLoadDataFromRootHeader();
 
+    reset();
     viewport()->update();
 }
 
