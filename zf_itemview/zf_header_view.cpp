@@ -912,7 +912,9 @@ void HeaderView::reloadDataFromRootItemHelper()
 
     emit sg_afterLoadDataFromRootHeader();
 
-    reset();
+    // грязный хак для сброса кэшированного значения sizeHint
+    qApp->postEvent(this, new QEvent(QEvent::StyleChange));
+
     viewport()->update();
 }
 
