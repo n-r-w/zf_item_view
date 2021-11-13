@@ -29,6 +29,6 @@ target_include_directories(${ID} PUBLIC
 target_link_libraries(${ID}
 	Qt${QT_VERSION_MAJOR}::Core 
 	Qt${QT_VERSION_MAJOR}::Gui 
-	Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Widgets
 	zf_item_view
 )
