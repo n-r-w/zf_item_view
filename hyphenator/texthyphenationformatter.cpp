@@ -98,6 +98,12 @@ QStringList TextHyphenationFormatter::splitHelper(const QString& text, int width
                              (restText, tempMaxWidth);
         while (realPixelWidth > width) {
             tempMaxWidth--;
+            if (tempMaxWidth == 0) {
+                if (!restText.isEmpty())
+                    splittedLines.append(restText);
+                return splittedLines;
+            }
+            
             if (restText.at(tempMaxWidth - 1) == ' ') {
                 // Исключаем пробелы между словами
                 tempMaxWidth--;
