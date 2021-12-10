@@ -211,6 +211,14 @@ void TreeView::paintEvent(QPaintEvent* event)
     Utils::paintHeaderDragHandle(this, horizontalHeader());
 }
 
+QStyleOptionViewItem TreeView::viewOptions() const
+{
+    auto opt = QTreeView::viewOptions();
+    // убираем выделение в узле (QPalette::Highlight используется в QCommonStyle::drawPrimitive - PE_PanelItemViewRow)
+    opt.palette.setBrush(QPalette::Highlight, QBrush(QColor(0, 0, 0, 0)));
+    return opt;
+}
+
 bool TreeView::event(QEvent* event)
 {
     bool res = QTreeView::event(event);
@@ -343,8 +351,7 @@ void TreeView::scrollContentsBy(int dx, int dy)
 
 void TreeView::selectColumn(int column)
 {
-    if (selectionBehavior() == QTreeView::SelectRows
-        || (selectionMode() == QTreeView::SingleSelection && selectionBehavior() == QTreeView::SelectItems))
+    if (selectionBehavior() == QTreeView::SelectRows || (selectionMode() == QTreeView::SingleSelection && selectionBehavior() == QTreeView::SelectItems))
         return;
 
     if (column < 0 || column >= model()->columnCount())
@@ -474,9 +481,8 @@ void TreeView::init()
     connect(this, &TreeView::collapsed, this, &TreeView::sl_collapsed);
 
     connect(horizontalHeader(), &HeaderView::sg_columnsDragging, this, &TreeView::sl_columnsDragging);
-    connect(horizontalHeader(), &HeaderView::sg_columnsDragFinished, this, &TreeView::sl_columnsDragFinished);    
-    connect(horizontalHeader(), &HeaderView::sg_beforeLoadDataFromRootHeader, this,
-        &TreeView::sl_beforeLoadDataFromRootHeader);
+    connect(horizontalHeader(), &HeaderView::sg_columnsDragFinished, this, &TreeView::sl_columnsDragFinished);
+    connect(horizontalHeader(), &HeaderView::sg_beforeLoadDataFromRootHeader, this, &TreeView::sl_beforeLoadDataFromRootHeader);
     connect(horizontalHeader(), &HeaderView::sg_afterLoadDataFromRootHeader, this, &TreeView::sl_afterLoadDataFromRootHeader);
 
     // иначе не будет обновляться отрисовка фильтра и т.п. глюки

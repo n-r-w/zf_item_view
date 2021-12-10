@@ -756,12 +756,20 @@ void ItemDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelInd
             current_index = tree->model()->index(current_index.row(), 0, current_index.parent());
         }
 
-// цвет фона текущей строки
-#define COLOR_CURRENT_LINE_BACKGROUND QColor(QStringLiteral("#D6EAFF"))
-// цвет фона выделенной ячейки
-#define COLOR_SELECTED_BACKGROUND QColor(QStringLiteral("#3399FF"))
+// цвет фона текущей строки при условии что фокус не на таблице
+#define COLOR_CURRENT_LINE_BACKGROUND_NOT_FOCUSED QColor(QStringLiteral("#ebf5ff"))
+// цвет фона текущей строки при условии что фокус на таблице
+#define COLOR_CURRENT_LINE_BACKGROUND_FOCUSED QColor(QStringLiteral("#ebf5ff"))
+// цвет фона выделенной ячейки при условии что фокус не на таблице
+#define COLOR_SELECTED_BACKGROUND_NOT_FOCUSED QColor(QStringLiteral("#bfdfff"))
+// цвет фона выделенной ячейки при условии что фокус на таблице
+#define COLOR_SELECTED_BACKGROUND_FOCUSED QColor(QStringLiteral("#04aa6d"))
+// Надо ли менять цвет текст для текущей ячейки, на которой нет фокуса ввода
+#define CHANGE_FONT_COLOR_FOR_NOT_FOCUSED false
 
         bool has_selection = false;
+        // находится ли таблица в фокусе
+        bool is_focused = item_view->hasFocus();
 
         // для оптимизации не используем selectedRows
         const QItemSelection selection = item_view->selectionModel()->selection();
@@ -810,31 +818,18 @@ void ItemDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelInd
         }
 
         if (is_current_cell || is_selected_row)
-            option->backgroundBrush = COLOR_SELECTED_BACKGROUND;
+            option->backgroundBrush = is_focused ? COLOR_SELECTED_BACKGROUND_FOCUSED : COLOR_SELECTED_BACKGROUND_NOT_FOCUSED;
         else if (is_current_row)
-            option->backgroundBrush = COLOR_CURRENT_LINE_BACKGROUND;
+            option->backgroundBrush = is_focused ? COLOR_CURRENT_LINE_BACKGROUND_FOCUSED : COLOR_CURRENT_LINE_BACKGROUND_NOT_FOCUSED;
         else
             option->backgroundBrush = QColor(Qt::white);
 
         QColor font_color;
-        if ((is_current_cell || is_selected_row) && !index.data(Qt::CheckStateRole).isValid())
+        if ((is_current_cell || is_selected_row) && !index.data(Qt::CheckStateRole).isValid() && (CHANGE_FONT_COLOR_FOR_NOT_FOCUSED || is_focused))
             font_color = QColor(Qt::white);
         else
             font_color = QColor(Qt::black);
         option->palette.setColor(QPalette::Text, font_color);
-    }
-
-    // переопределяем цвета
-    QBrush background_brush = option->backgroundBrush;
-    // Защита от дурака. Текущую строку переопределять не даем (шрифт однако менять разрешаем)
-    if (is_current_cell && is_current_row) {
-        option->backgroundBrush = background_brush;
-    }
-
-    // Иконка могла быть переназначена внутри getDatasetCellProperties
-    if (!option->icon.isNull()) {
-        option->features |= QStyleOptionViewItem::HasDecoration;
-        option->decorationSize = iconSize(option->icon);
     }
 
     // Убираем флаги выделения, чтобы Qt не перерисовывал фокус

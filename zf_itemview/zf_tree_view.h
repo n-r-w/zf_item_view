@@ -85,12 +85,12 @@ public: // выделение ячеек (чекбоксы внутри ячее
         int level) const override;
     //! Колонки, в ячейках которых, находятся чекбоксы
     void setCellCheckColumn(int logical_index,
-                            //! Колонка видима
-                            bool visible,
-                            //! Пользователь может менять состояние чекбоксов
-                            bool enabled,
-                            //! Ячейки выделяются только для данного уровня вложенности. Если -1, то для всех
-                            int level = -1) override;
+        //! Колонка видима
+        bool visible,
+        //! Пользователь может менять состояние чекбоксов
+        bool enabled,
+        //! Ячейки выделяются только для данного уровня вложенности. Если -1, то для всех
+        int level = -1) override;
     //! Состояние чекбокса ячейки
     bool isCellChecked(const QModelIndex& index) const override;
     //! Задать состояние чекбокса ячейки. Если колонка не находится в cellCheckColumns, то она туда добавляется
@@ -115,7 +115,8 @@ public:
 #endif
 
 protected:
-    void paintEvent(QPaintEvent* event) override;
+    void paintEvent(QPaintEvent* event) override;    
+    QStyleOptionViewItem viewOptions() const override;
     bool event(QEvent* event) override;
     QModelIndex moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers) override;
     bool viewportEvent(QEvent* event) override;
@@ -136,7 +137,7 @@ signals:
 
 private slots:
     //! Выделить указанную колонку
-    void selectColumn(int column);    
+    void selectColumn(int column);
     //! Вызывается перед началом перезагрузки данных из rootItem
     void sl_beforeLoadDataFromRootHeader();
     //! Вызывается после окончания перезагрузки данных из rootItem
@@ -157,7 +158,7 @@ private slots:
         bool allow);
 
     //! Перемещение колонок завершено
-    void sl_columnsDragFinished();    
+    void sl_columnsDragFinished();
     //! Смена ширины колонки
     void sl_columnResized(int column, int oldWidth, int newWidth);
 
