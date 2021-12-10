@@ -38,8 +38,7 @@ QString HintItemDelegate::displayText(const QVariant& value, const QLocale& loca
     return QStyledItemDelegate::displayText(value, locale);
 }
 
-bool HintItemDelegate::helpEvent(
-    QHelpEvent* event, QAbstractItemView* v, const QStyleOptionViewItem& option, const QModelIndex& index)
+bool HintItemDelegate::helpEvent(QHelpEvent* event, QAbstractItemView* v, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     QStyleOptionViewItem opt = option;
     initStyleOption(&opt, index);
@@ -80,8 +79,7 @@ void HintItemDelegate::initStyleOption(QStyleOptionViewItem* option, const QMode
     //    option->features = option->features & ~QStyleOptionViewItem::WrapText;
 }
 
-ItemDelegate::ItemDelegate(QAbstractItemView* item_view, QAbstractItemView* main_item_view, I_ItemDelegateCheckInfo* check_info_interface,
-                           QObject* parent)
+ItemDelegate::ItemDelegate(QAbstractItemView* item_view, QAbstractItemView* main_item_view, I_ItemDelegateCheckInfo* check_info_interface, QObject* parent)
     : HintItemDelegate(parent)
     , _item_view(item_view)
     , _main_item_view(main_item_view)
@@ -165,8 +163,7 @@ QString ItemDelegate::getDisplayText(const QModelIndex& index, QStyleOptionViewI
     return text;
 }
 
-void ItemDelegate::updateEditorGeometry(
-    QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void ItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     lazyInit();
 
@@ -309,8 +306,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
             if (item_rect.isValid()) {
                 QPoint cursor_screen_pos = QCursor::pos();
                 QPoint checkbox_screen_top_left = _item_view->viewport()->mapToGlobal(check_rect.topLeft());
-                QRect checkbox_screen_rect
-                    = {checkbox_screen_top_left.x(), checkbox_screen_top_left.y(), check_rect.width(), check_rect.height()};
+                QRect checkbox_screen_rect = {checkbox_screen_top_left.x(), checkbox_screen_top_left.y(), check_rect.width(), check_rect.height()};
                 mouse_over = checkbox_screen_rect.contains(cursor_screen_pos);
             }
 
@@ -329,7 +325,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
     }
 
     painter->save();
-    opt.rect.setLeft(opt.rect.left() + check_shift);    
+    opt.rect.setLeft(opt.rect.left() + check_shift);
     paintCellContent(style, painter, &opt, index, opt.widget);
     painter->restore();
 }
@@ -414,8 +410,7 @@ bool ItemDelegate::eventFilter(QObject* object, QEvent* event)
             // Для QPlainTextEdit необходима обработка закрытия
             QPlainTextEdit* pte = qobject_cast<QPlainTextEdit*>(_current_editor);
             if (pte != nullptr) {
-                if ((keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return)
-                    && keyEvent->modifiers() == Qt::ControlModifier) {
+                if ((keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return) && keyEvent->modifiers() == Qt::ControlModifier) {
                     // Ctrl + Enter закрывает QPlainTextEdit
                     _close_widget = pte;
                     _close_editor_timer->start();
@@ -470,7 +465,7 @@ void ItemDelegate::sl_closeEditor(QWidget* editor, QAbstractItemDelegate::EndEdi
 
     emit commitData(_close_widget.data());
 
-    _close_widget = nullptr;    
+    _close_widget = nullptr;
 }
 
 void ItemDelegate::sl_currentChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -501,7 +496,7 @@ void ItemDelegate::popupClosedInternal(bool applied)
         _item_view->setFocus();
 }
 
-void ItemDelegate::paintCellContent(QStyle *style, QPainter *p, const QStyleOptionViewItem* opt, const QModelIndex &index, const QWidget *widget) const
+void ItemDelegate::paintCellContent(QStyle* style, QPainter* p, const QStyleOptionViewItem* opt, const QModelIndex& index, const QWidget* widget) const
 {
     Q_UNUSED(index)
 
@@ -582,7 +577,7 @@ void ItemDelegate::paintCellContent(QStyle *style, QPainter *p, const QStyleOpti
     }
 }
 
-void ItemDelegate::viewItemDrawText(QStyle* style, QPainter *p, const QStyleOptionViewItem *option, const QRect &rect) const
+void ItemDelegate::viewItemDrawText(QStyle* style, QPainter* p, const QStyleOptionViewItem* option, const QRect& rect) const
 {
     const QWidget* widget = option->widget;
     const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1;
@@ -621,6 +616,7 @@ void ItemDelegate::viewItemDrawText(QStyle* style, QPainter *p, const QStyleOpti
         cursor.mergeCharFormat(format);
     }
     // Рисуем текст без обводной линии
+    ctx.palette.setColor(QPalette::Text, option->palette.color(QPalette::Text));
     doc.documentLayout()->draw(p, ctx);
     p->restore();
 
@@ -642,7 +638,7 @@ void ItemDelegate::initTextDocument(const QStyleOptionViewItem* option, const QM
     doc.setHtml(optionV4.text);
 }
 
-QSizeF ItemDelegate::viewItemTextLayout(QTextLayout &textLayout, int lineWidth, int maxHeight, int *lastVisibleLine)
+QSizeF ItemDelegate::viewItemTextLayout(QTextLayout& textLayout, int lineWidth, int maxHeight, int* lastVisibleLine)
 {
     if (lastVisibleLine)
         *lastVisibleLine = -1;
@@ -714,8 +710,7 @@ void ItemDelegate::lazyInit() const
             return;
 
         emit const_cast<ItemDelegate*>(this)->commitData(_close_widget.data());
-        emit const_cast<ItemDelegate*>(this)->closeEditor(_close_widget.data(),
-                                                          QAbstractItemDelegate::SubmitModelCache);
+        emit const_cast<ItemDelegate*>(this)->closeEditor(_close_widget.data(), QAbstractItemDelegate::SubmitModelCache);
 
         _close_widget = nullptr;
         _current_editor = nullptr;
@@ -744,7 +739,7 @@ void ItemDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelInd
     lazyInit();
 
     QAbstractItemView* item_view = _main_item_view != nullptr ? _main_item_view : _item_view;
-    QModelIndex current_index;    
+    QModelIndex current_index;
     QModelIndex source_index = index;
     // текущая ячейка
     bool is_current_cell = false;
@@ -809,8 +804,7 @@ void ItemDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelInd
             // Проверяем span
             QTableView* tw = qobject_cast<QTableView*>(item_view);
             if ((!tw && current_index.row() == index.row())
-                || (tw && index.row() >= current_index.row()
-                    && index.row() < current_index.row() + tw->rowSpan(current_index.row(), current_index.column()))) {
+                || (tw && index.row() >= current_index.row() && index.row() < current_index.row() + tw->rowSpan(current_index.row(), current_index.column()))) {
                 is_current_row = true;
             }
         }
@@ -831,7 +825,7 @@ void ItemDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelInd
     }
 
     // переопределяем цвета
-    QBrush background_brush = option->backgroundBrush;    
+    QBrush background_brush = option->backgroundBrush;
     // Защита от дурака. Текущую строку переопределять не даем (шрифт однако менять разрешаем)
     if (is_current_cell && is_current_row) {
         option->backgroundBrush = background_brush;
