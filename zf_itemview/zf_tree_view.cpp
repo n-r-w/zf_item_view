@@ -194,15 +194,6 @@ void TreeView::delegateGetCheckInfo(QAbstractItemView* item_view, const QModelIn
     checked = isCellChecked(index);
 }
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
-QStyleOptionViewItem TreeView::viewOptions() const
-{
-    QStyleOptionViewItem opt;
-    initViewItemOption(&opt);
-    return opt;
-}
-#endif
-
 void TreeView::paintEvent(QPaintEvent* event)
 {
     QTreeView::paintEvent(event);
@@ -213,11 +204,25 @@ void TreeView::paintEvent(QPaintEvent* event)
 
 QStyleOptionViewItem TreeView::viewOptions() const
 {
-    auto opt = QTreeView::viewOptions();
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    QStyleOptionViewItem opt = QTreeView::viewOptions();
     // убираем выделение в узле (QPalette::Highlight используется в QCommonStyle::drawPrimitive - PE_PanelItemViewRow)
     opt.palette.setBrush(QPalette::Highlight, QBrush(QColor(0, 0, 0, 0)));
+#else
+    QStyleOptionViewItem opt;
+    initViewItemOption(&opt);
+#endif
     return opt;
 }
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+void TreeView::initViewItemOption(QStyleOptionViewItem* option) const
+{
+    QTreeView::initViewItemOption(option);
+    // убираем выделение в узле (QPalette::Highlight используется в QCommonStyle::drawPrimitive - PE_PanelItemViewRow)
+    option->palette.setBrush(QPalette::Highlight, QBrush(QColor(0, 0, 0, 0)));
+}
+#endif
 
 bool TreeView::event(QEvent* event)
 {
@@ -612,9 +617,10 @@ QSet<QModelIndex> TreeView::checkedRows() const
     QSet<QModelIndex> res;
     if (isAllRowsChecked() && _checked.isEmpty()) {
         QModelIndexList all_indexes;
-        Utils::getAllIndexes(Utils::getTopSourceModel(model()), all_indexes);
-        for (auto& idx : qAsConst(all_indexes)) {
-            res << idx;
+        Utils::getAllIndexes(model(), all_indexes);
+
+        for (auto& i : qAsConst(all_indexes)) {
+            res << Utils::getTopSourceIndex(i);
         }
 
     } else {

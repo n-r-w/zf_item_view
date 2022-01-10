@@ -105,8 +105,7 @@ void CheckBoxPanel::paintEvent(QPaintEvent* e)
     // заголовок
     if (_view->horizontalHeader()->isVisible()) {
         painter.save();
-        QRect header_rect
-            = QRect(1, _view->horizontalHeader()->geometry().top(), width() - 1, _view->horizontalHeader()->geometry().bottom());
+        QRect header_rect = QRect(1, _view->horizontalHeader()->geometry().top(), width() - 1, _view->horizontalHeader()->geometry().bottom());
         painter.fillRect(header_rect, palette().brush(QPalette::Button));
 
         painter.setPen(Utils::uiLineColor(true));
@@ -265,7 +264,7 @@ QSize CheckBoxPanel::checkboxSize()
 }
 
 int CheckBoxPanel::cursorRow(const QPoint& c) const
-{    
+{
     auto rects = checkboxRects();
     int shift = 0;
     for (auto& rect : qAsConst(rects)) {
@@ -283,7 +282,6 @@ QWidget* TableView::cornerWidget() const
     return _corner_widget;
 }
 
-
 void TableView::setCornerWidget(QWidget* widget)
 {
     if (_corner_widget != nullptr)
@@ -299,8 +297,7 @@ void TableView::setCornerWidget(QWidget* widget)
     updateCornerWidget();
 }
 
-void TableView::setCornerText(
-    const QString& text, Qt::Alignment alignment, int margin_left, int margin_right, int margin_top, int margin_bottom)
+void TableView::setCornerText(const QString& text, Qt::Alignment alignment, int margin_left, int margin_right, int margin_top, int margin_bottom)
 {
     _corner_text = text;
     _corner_alignment = alignment;
@@ -458,8 +455,7 @@ void TableView::scrollTo(const QModelIndex& index, QAbstractItemView::ScrollHint
     }
 
     if (index.isValid() && _frozen_table_view) {
-        _frozen_table_view->scrollTo(
-            model()->index(index.row(), _frozen_table_view->indexAt(_frozen_table_view->rect().topLeft()).column()));
+        _frozen_table_view->scrollTo(model()->index(index.row(), _frozen_table_view->indexAt(_frozen_table_view->rect().topLeft()).column()));
     }
 }
 
@@ -561,9 +557,10 @@ QSet<int> TableView::checkedRows() const
     if (isAllRowsChecked() && _checked.isEmpty()) {
         QSet<int> res;
         QModelIndexList all_indexes;
-        Utils::getAllIndexes(Utils::getTopSourceModel(model()), all_indexes);
-        for (int i = 0; i < all_indexes.count(); i++) {
-            res << all_indexes.at(i).row();
+        Utils::getAllIndexes(model(), all_indexes);
+
+        for (auto& i : qAsConst(all_indexes)) {
+            res << Utils::getTopSourceIndex(i).row();
         }
 
         return res;
@@ -897,12 +894,11 @@ void TableView::updateCornerWidget()
 
         _corner_label->setHidden(false);
         _corner_label->setAlignment(_corner_alignment);
-        _corner_label->setGeometry(_corner_margin_left, _corner_margin_top,
-            verticalHeader()->width() - _corner_margin_left - _corner_margin_right,
+        _corner_label->setGeometry(_corner_margin_left, _corner_margin_top, verticalHeader()->width() - _corner_margin_left - _corner_margin_right,
             horizontalHeader()->height() - _corner_margin_top - _corner_margin_bottom);
 
-        _corner_label->setText(Hyphenation::GlobalTextHyphenationFormatter::stringToMultiline(
-            _corner_label->fontMetrics(), _corner_text, _corner_label->rect().width()));
+        _corner_label->setText(
+            Hyphenation::GlobalTextHyphenationFormatter::stringToMultiline(_corner_label->fontMetrics(), _corner_text, _corner_label->rect().width()));
     }
 
     if (verticalHeader() == nullptr || horizontalHeader() == nullptr || !verticalHeader()->isVisible()) {
@@ -1124,9 +1120,7 @@ void TableView::updateFrozenTableGeometry()
 
 int TableView::frozenRightPos() const
 {
-    if (_frozen_table_view == nullptr
-        || _frozen_table_view->horizontalHeader()->count()
-            == _frozen_table_view->horizontalHeader()->hiddenSectionCount())
+    if (_frozen_table_view == nullptr || _frozen_table_view->horizontalHeader()->count() == _frozen_table_view->horizontalHeader()->hiddenSectionCount())
         return 0;
 
     int w = 0;
@@ -1167,8 +1161,7 @@ void TableView::updateFrozenCurrentCellPosition()
     int pos = frozenRightPos();
     QRect currentRect = visualRect(current);
 
-    if (frozen_sections > 0 && horizontalHeader()->visualIndex(current.column()) >= frozen_sections
-        && currentRect.left() < pos) {
+    if (frozen_sections > 0 && horizontalHeader()->visualIndex(current.column()) >= frozen_sections && currentRect.left() < pos) {
         int newValue = horizontalScrollBar()->value() + currentRect.left() - pos;
         horizontalScrollBar()->setValue(newValue);
     }
@@ -1220,20 +1213,16 @@ void TableView::updateFrozenCount()
 
             connect(verticalScrollBar(), &QScrollBar::valueChanged, _frozen_table_view->verticalScrollBar(), &QScrollBar::setValue);
 
-            connect(_frozen_table_view->horizontalHeader(), &HeaderView::sectionResized, this,
-                &TableView::sl_frozen_horizontalSectionResized);
+            connect(_frozen_table_view->horizontalHeader(), &HeaderView::sectionResized, this, &TableView::sl_frozen_horizontalSectionResized);
 
-            connect(_frozen_table_view->selectionModel(), &QItemSelectionModel::currentChanged, this,
-                &TableView::sl_frozen_currentChanged);
+            connect(_frozen_table_view->selectionModel(), &QItemSelectionModel::currentChanged, this, &TableView::sl_frozen_currentChanged);
             connect(_frozen_table_view, &TableViewBase::clicked, this, &TableView::sl_frozenClicked);
             connect(_frozen_table_view, &TableViewBase::doubleClicked, this, &TableView::sl_frozenDoubleClicked);
-            connect(_frozen_table_view->verticalScrollBar(), &QScrollBar::valueChanged, verticalScrollBar(),
-                &QScrollBar::setValue);
+            connect(_frozen_table_view->verticalScrollBar(), &QScrollBar::valueChanged, verticalScrollBar(), &QScrollBar::setValue);
 
             // Надо обеспечить сохранение фокуса на остновной таблице после окончания
             // редактирования фиксированной ячейки
-            connect(_frozen_table_view->itemDelegate(), &QAbstractItemDelegate::closeEditor, this,
-                &TableView::sl_frozenCloseEditor, Qt::QueuedConnection);
+            connect(_frozen_table_view->itemDelegate(), &QAbstractItemDelegate::closeEditor, this, &TableView::sl_frozenCloseEditor, Qt::QueuedConnection);
 
             _frozen_table_view->horizontalHeader()->setJoinedHeader(horizontalHeader());
             _frozen_table_view->verticalHeader()->setJoinedHeader(verticalHeader());
@@ -1284,7 +1273,7 @@ TableView::TableView(QWidget* parent)
 }
 
 TableView::~TableView()
-{ 
+{
 }
 
 HeaderItem* TableView::rootHeaderItem(Qt::Orientation orientation) const
@@ -1301,10 +1290,9 @@ void TableView::paintEvent(QPaintEvent* event)
          * не виртуальные, то нормальным путем невозможно перехватить их изменение */
         if (!_need_update_frozen_properties
             && (_frozen_table_view->isSortingEnabled() != isSortingEnabled() || _frozen_table_view->editTriggers() != editTriggers()
-                || _frozen_table_view->alternatingRowColors() != alternatingRowColors()
-                || _frozen_table_view->selectionBehavior() != selectionBehavior()
-                || _frozen_table_view->isConfigMenuEnabled() != isConfigMenuEnabled()
-                || _frozen_table_view->selectionMode() != selectionMode() || _frozen_table_view->toolTip() != toolTip()
+                || _frozen_table_view->alternatingRowColors() != alternatingRowColors() || _frozen_table_view->selectionBehavior() != selectionBehavior()
+                || _frozen_table_view->isConfigMenuEnabled() != isConfigMenuEnabled() || _frozen_table_view->selectionMode() != selectionMode()
+                || _frozen_table_view->toolTip() != toolTip()
                 || _frozen_table_view->verticalHeader()->defaultSectionSize() != verticalHeader()->defaultSectionSize()
                 || _frozen_table_view->wordWrap() != wordWrap())) {
             QApplication::postEvent(this, new QEvent(static_cast<QEvent::Type>(UPDATE_FROZEN_PROPERTIES_EVENT)));

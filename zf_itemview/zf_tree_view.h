@@ -108,15 +108,14 @@ public:
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     //! Выводим в паблик
-    using QTreeView::viewOptions;
+    QStyleOptionViewItem viewOptions() const override;
 #else
     //! Для совместимости с Qt5
     QStyleOptionViewItem viewOptions() const;
 #endif
 
 protected:
-    void paintEvent(QPaintEvent* event) override;    
-    QStyleOptionViewItem viewOptions() const override;
+    void paintEvent(QPaintEvent* event) override;
     bool event(QEvent* event) override;
     QModelIndex moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers) override;
     bool viewportEvent(QEvent* event) override;
@@ -124,6 +123,9 @@ protected:
     void mousePressEvent(QMouseEvent* e) override;
     void mouseDoubleClickEvent(QMouseEvent* e) override;
     void scrollContentsBy(int dx, int dy) override;
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    void initViewItemOption(QStyleOptionViewItem* option) const override;
+#endif
 
 signals:
     //! Изменилось выделение чекбоксами
