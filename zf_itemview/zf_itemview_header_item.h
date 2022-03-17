@@ -118,6 +118,8 @@ public:
     HeaderItem* setSectionSize(int sectionSize);
     //! Размер секции (для горизонтального - ширина колонки, вертикального - высота строки)
     int sectionSize() const;
+    //! Размер суммы секций нижнего уровня
+    int bottomSectionsSize(int start_section, int end_section, bool only_visible = false) const;
 
     //! Для вертикального - ширина ячейки
     int verticalCellWidth() const;
@@ -136,6 +138,7 @@ public:
     HeaderItem* show() { return setHidden(false); }
     HeaderItem* hide() { return setHidden(true); }
     bool isHidden() const;
+    bool isVisible() const { return !isHidden(); }
 
     //! Разрешить/запретить перенос колонок пользователем
     HeaderItem* setMovable(bool b);

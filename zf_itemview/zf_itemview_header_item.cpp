@@ -394,8 +394,21 @@ HeaderItem* HeaderItem::setSectionSize(int width)
 }
 
 int HeaderItem::sectionSize() const
-{    
+{
     return _section_size;
+}
+
+int HeaderItem::bottomSectionsSize(int start_section, int end_section, bool only_visible) const
+{
+    Q_ASSERT(start_section <= end_section);
+    int size = 0;
+    for (int i = start_section; i <= end_section; i++) {
+        if (only_visible && bottomItem(i)->isHidden())
+            continue;
+
+        size += bottomItem(i)->sectionSize();
+    }
+    return size;
 }
 
 int HeaderItem::verticalCellWidth() const
